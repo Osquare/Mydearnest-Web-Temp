@@ -1,0 +1,258 @@
+/* 공통 */
+body {
+	font-family: 'Noto Sans', sans-serif;
+}
+
+.backContainer {
+	width:100%;
+	font-size: 16px;
+}
+
+.btnContainer {
+	text-align: center;
+}
+.btnDownload {
+	display:inline-block;
+}
+
+p.ps {
+	padding: 10px 0px;
+	
+	font-size: 11px;
+	line-height: 110% !important;
+	color: #ccc;
+}
+
+p.ps.footer {
+	font-size: 12px;
+	text-align:center;
+}
+
+.contentContainer .title {
+	padding: 10px;
+}
+
+/* 앰블럼섹션 */
+.emblemBackground {
+	color: #fff;
+	background :#E97060;
+	
+	box-shadow: 0px 3px 5px #cccccc;
+	-moz-box-shadow: 0px 3px 5px #cccccc;
+	-webkit-box-shadow: 0px 3px 5px #cccccc;
+	z-index:5;
+	}
+
+.emblemBackground .imageContainer {
+	padding-top: 14px;
+	width: 500px;
+	height: 74px;
+	margin:auto;
+}
+
+.emblemBackground .container .image {
+	width:160px;
+	margin:auto;
+	
+}
+
+.emblemBackground .container .imageDesc {
+	display:inline-block;
+	float:left;
+	height:95px;
+	padding: 10px;
+	margin-left: 10px;
+	vertical-align: middle
+}
+
+.emblemBackground .introStart {
+	clear:both;
+	text-align:center;
+	padding:20px;
+	font-size: 22px;
+}
+
+/* 앱 섹션 */
+.appBackground {
+	color: #878787;
+	background: #FEF8F4;
+}
+
+.appBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	padding-top: 50px;
+}
+
+.appBackground .contentContainer .image {
+	width: 250px;
+	position: relative;
+	top: 14px;
+	float:left;
+}
+
+.appBackground .contentContainer .imageDesc {
+	padding: 35px;
+	width: 450px;
+	float:left;
+	display:inline-block;
+}
+
+.appBackground .contentContainer .desc {
+	padding:20px;
+}
+
+/* 페이스북 섹션 */
+.fbBackground {
+	color: #878787;
+}
+
+.fbBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	padding-top: 50px;
+}
+
+.fbBackground .contentContainer .image {
+	width: 250px;
+	float:left;
+}
+
+.fbBackground .contentContainer .imageDesc {
+	padding: 35px 0px 35px 50px;
+	width: 410px;
+	float:left;
+	display:inline-block;
+}
+
+.fbBackground .contentContainer .desc {
+	padding:20px;
+}
+
+/* 카카오스토리 섹션 */
+.kakaoBackground {
+	color: #878787;
+	background: #FEF8F4;
+}
+
+.kakaoBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	padding-top: 50px;
+}
+
+.kakaoBackground .contentContainer .image {
+	width: 250px;
+	float:left;
+}
+
+.kakaoBackground .contentContainer .imageDesc {
+	padding: 35px;
+	width: 450px;
+	float:left;
+	display:inline-block;
+}
+
+.kakaoBackground .contentContainer .desc {
+	padding:20px;
+}
+
+/* 페이스북 비공개그룹 섹션 */
+.fbGroupBackground {
+	color: #878787;
+}
+
+.fbGroupBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	padding-top: 50px;
+}
+
+.fbGroupBackground .contentContainer .image {
+	width: 250px;
+	float:left;
+}
+
+.fbGroupBackground .contentContainer .imageDesc {
+	padding: 20px 0px 20px 40px;
+	width: 410px;
+	float:left;
+	display:inline-block;
+}
+
+.fbGroupBackground .contentContainer .desc {
+	padding:0px 20px;
+}
+
+/* 카카오스토리 섹션 */
+.instaBackground {
+	color: #878787;
+	background: #FEF8F4;
+}
+
+.instaBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	padding-top: 50px;
+}
+
+.instaBackground .contentContainer .image {
+	width: 250px;
+	float:left;
+}
+
+.instaBackground .contentContainer .imageDesc {
+	padding: 35px;
+	width: 450px;
+	float:left;
+	display:inline-block;
+}
+
+.instaBackground .contentContainer .desc {
+	padding:20px;
+}
+
+/* 엠블럼 상세 섹션 */
+.emblemDetailBackground .contentContainer {
+	width: 700px;
+	margin: 0px auto;
+	display:none;
+}
+
+.emblemDetailBackground .title {
+	text-align: center;
+	padding: 20px;
+}
+
+.emblemDetailBackground .list {
+	width: 425px;
+	padding:0px;
+	margin: 0px auto;
+}
+
+.emblemDetailBackground .list .item {
+	clear:both;
+	border-bottom: 1px solid #eee;
+	height: 150px;
+}
+
+.emblemDetailBackground .list .item .itemImage {
+	margin: 0px 25px 0px 0px;
+	width: 150px;
+	height: 150px;
+	padding: 25px;
+	overflow:hidden;
+	float:left;
+}
+
+.emblemDetailBackground .list .item .itemTitle {
+	width: 250px;
+	height: 150px;
+	padding: 45px 25px;
+	font-size:18px;
+	font-weight:bold;
+	float:left;
+}
+
+
+
