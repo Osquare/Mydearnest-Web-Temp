@@ -1,0 +1,29 @@
+{
+  "name": "mydearnest-web-temp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Osquare/Mydearnest-Web-Temp.git"
+  },
+  "author": "young-utf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Osquare/Mydearnest-Web-Temp/issues"
+  },
+  "homepage": "https://github.com/Osquare/Mydearnest-Web-Temp#readme",
+  "dependencies": {
+    "babel-core": "^5.8.20",
+    "babel-loader": "^5.3.2",
+    "gulp": "^3.9.0",
+    "react": "^0.13.3",
+    "webpack": "^1.10.5"
+  },
+  "devDependencies": {
+    "webpack-stream": "^2.1.0"
+  }
+}
