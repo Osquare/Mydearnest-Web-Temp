@@ -20,23 +20,25 @@ var List = React.createClass({
     render: function () {
         var list = this.state.list;
         return (
-            <Banner/>
-            {
-                list.map(function (data) {
-                    var style = {
-                        "background-image": 'url(' + data.image_url + ')'
-                    };
-                    return (
-                        <a className="magazineItem" href="./view.php?id=" + {data.id} style={style}>
-                            <div className="magazineItemGradient">
-                                <div className="magazineItemText">
-                                    {data.text}
+            <div>
+                <Banner/>
+                {
+                    list.map(function (data) {
+                        var style = {
+                            "background-image": 'url(' + data.image_url + ')'
+                        };
+                        return (
+                            <a className="magazineItem" href="./view.php?id={data.id}" style={style}>
+                                <div className="magazineItemGradient">
+                                    <div className="magazineItemText">
+                                        {data.text}
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    );
-                })
-            }
+                            </a>
+                        );
+                    })
+                }
+            </div>
         );
     }
 });

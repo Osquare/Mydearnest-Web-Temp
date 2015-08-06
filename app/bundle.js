@@ -48,7 +48,7 @@
 
 	var React = __webpack_require__(1),
 	    $ = __webpack_require__(157),
-	    List = __webpack_require__(159);
+	    List = __webpack_require__(158);
 
 	var App = React.createClass({
 		displayName: 'App',
@@ -29662,6 +29662,63 @@
 	'use strict';
 
 	var React = __webpack_require__(1),
+	    $ = __webpack_require__(157),
+	    Banner = __webpack_require__(159),
+	    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+
+	var List = React.createClass({
+	    displayName: 'List',
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            list: []
+	        };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        var that = this;
+	        $.get(API_URL, function (data) {
+	            that.setState({
+	                list: data.data
+	            });
+	        });
+	    },
+	    render: function render() {
+	        var list = this.state.list;
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement(Banner, null),
+	            list.map(function (data) {
+	                var style = {
+	                    "background-image": 'url(' + data.image_url + ')'
+	                };
+	                return React.createElement(
+	                    'a',
+	                    { className: 'magazineItem', href: './view.php?id={data.id}', style: style },
+	                    React.createElement(
+	                        'div',
+	                        { className: 'magazineItemGradient' },
+	                        React.createElement(
+	                            'div',
+	                            { className: 'magazineItemText' },
+	                            data.text
+	                        )
+	                    )
+	                );
+	            })
+	        );
+	    }
+	});
+
+	module.exports = List;
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1),
 	    $ = __webpack_require__(157);
 
 	var Banner = React.createClass({
@@ -29674,37 +29731,6 @@
 	});
 
 	module.exports = Banner;
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1),
-	    $ = __webpack_require__(157),
-	    Banner = __webpack_require__(158),
-	    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
-
-	var List = React.createClass({
-	    displayName: 'List',
-
-	    getInitialState: function getInitialState() {
-	        return {
-	            list: []
-	        };
-	    },
-	    componentDidMount: function componentDidMount() {
-	        $.get(API_URL, function (data) {
-	            console.log(data);
-	        });
-	    },
-	    render: function render() {
-	        return React.createElement(Banner, null);
-	    }
-	});
-
-	module.exports = List;
 
 /***/ }
 /******/ ]);
