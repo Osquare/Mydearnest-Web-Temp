@@ -1,15 +1,15 @@
 var React = require('react'),
 	$ = require('jquery'),
-	Banner = require('./banner/Banner');
+	List = require('./ContentList/List');
 
 var App = React.createClass({
 	render: function  () {
 		return (
 			<div id="Content" className="magazineWrapper clearfix">
-				<Banner />
+				<List />
 			</div>
 		);
 	}
 });
 
-React.render(<App />, document.getElementById('app'));
+React.render(<App />, document.getElementById('ContentWrapper'));

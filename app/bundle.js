@@ -48,7 +48,7 @@
 
 	var React = __webpack_require__(1),
 	    $ = __webpack_require__(157),
-	    Banner = __webpack_require__(158);
+	    List = __webpack_require__(159);
 
 	var App = React.createClass({
 		displayName: 'App',
@@ -57,12 +57,12 @@
 			return React.createElement(
 				'div',
 				{ id: 'Content', className: 'magazineWrapper clearfix' },
-				React.createElement(Banner, null)
+				React.createElement(List, null)
 			);
 		}
 	});
 
-	React.render(React.createElement(App, null), document.getElementById('app'));
+	React.render(React.createElement(App, null), document.getElementById('ContentWrapper'));
 
 /***/ },
 /* 1 */
@@ -29674,6 +29674,37 @@
 	});
 
 	module.exports = Banner;
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1),
+	    $ = __webpack_require__(157),
+	    Banner = __webpack_require__(158),
+	    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+
+	var List = React.createClass({
+	    displayName: 'List',
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            list: []
+	        };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        $.get(API_URL, function (data) {
+	            console.log(data);
+	        });
+	    },
+	    render: function render() {
+	        return React.createElement(Banner, null);
+	    }
+	});
+
+	module.exports = List;
 
 /***/ }
 /******/ ]);
