@@ -29701,11 +29701,11 @@
 	                };
 	                var href = './view.php?id=' + data.id;
 	                var style = {
-	                    "background-image": 'url(' + data.image_url + ')'
+	                    "backgroundImage": 'url(' + data.image_url + ')'
 	                };
 	                return React.createElement(
 	                    'a',
-	                    { className: 'magazineItem', href: href, style: style },
+	                    { className: 'magazineItem', href: href, style: style, key: data.id },
 	                    React.createElement(
 	                        'div',
 	                        { className: 'magazineItemGradient' },

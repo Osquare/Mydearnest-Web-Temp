@@ -36,10 +36,10 @@ var List = React.createClass({
                         };
                         var href = './view.php?id=' + data.id;
                         var style = {
-                            "background-image": 'url(' + data.image_url + ')'
+                            "backgroundImage": 'url(' + data.image_url + ')'
                         };
                         return (
-                            <a className="magazineItem" href={href} style={style}>
+                            <a className="magazineItem" href={href} style={style} key={data.id}>
                                 <div className="magazineItemGradient">
                                     <div className="magazineItemText">
                                         {data.text}
