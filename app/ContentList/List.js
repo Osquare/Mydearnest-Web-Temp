@@ -1,7 +1,12 @@
 var React = require('react'),
     $ = require('jquery'),
     Banner = require('../banner/Banner'),
-    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines',
+    IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
+
+var escapeHTML = function(text) {
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
+};
 
 var List = React.createClass({
     getInitialState: function () {
@@ -24,7 +29,11 @@ var List = React.createClass({
                 <Banner/>
                 {
                     list.map(function (data) {
-                        console.log(data);
+                        var data = {
+                            id: data._id,
+                            image_url: IMAGE_URL.replace(/{id}/gi, data.contents.title.image),
+                            text: escapeHTML(data.contents.title.text)
+                        };
                         var href = './view.php?id=' + data.id;
                         var style = {
                             "background-image": 'url(' + data.image_url + ')'

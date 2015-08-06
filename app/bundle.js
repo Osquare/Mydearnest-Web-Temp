@@ -29664,7 +29664,12 @@
 	var React = __webpack_require__(1),
 	    $ = __webpack_require__(157),
 	    Banner = __webpack_require__(159),
-	    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+	    API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines',
+	    IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
+
+	var escapeHTML = function escapeHTML(text) {
+	    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
+	};
 
 	var List = React.createClass({
 	    displayName: 'List',
@@ -29689,7 +29694,11 @@
 	            null,
 	            React.createElement(Banner, null),
 	            list.map(function (data) {
-	                console.log(data);
+	                var data = {
+	                    id: data._id,
+	                    image_url: IMAGE_URL.replace(/{id}/gi, data.contents.title.image),
+	                    text: escapeHTML(data.contents.title.text)
+	                };
 	                var href = './view.php?id=' + data.id;
 	                var style = {
 	                    "background-image": 'url(' + data.image_url + ')'
