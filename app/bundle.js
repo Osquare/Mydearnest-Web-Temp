@@ -29689,12 +29689,14 @@
 	            null,
 	            React.createElement(Banner, null),
 	            list.map(function (data) {
+	                console.log(data);
+	                var href = './view.php?id=' + data.id;
 	                var style = {
 	                    "background-image": 'url(' + data.image_url + ')'
 	                };
 	                return React.createElement(
 	                    'a',
-	                    { className: 'magazineItem', href: './view.php?id={data.id}', style: style },
+	                    { className: 'magazineItem', href: href, style: style },
 	                    React.createElement(
 	                        'div',
 	                        { className: 'magazineItemGradient' },

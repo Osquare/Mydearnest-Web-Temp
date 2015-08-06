@@ -24,11 +24,13 @@ var List = React.createClass({
                 <Banner/>
                 {
                     list.map(function (data) {
+                        console.log(data);
+                        var href = './view.php?id=' + data.id;
                         var style = {
                             "background-image": 'url(' + data.image_url + ')'
                         };
                         return (
-                            <a className="magazineItem" href="./view.php?id={data.id}" style={style}>
+                            <a className="magazineItem" href={href} style={style}>
                                 <div className="magazineItemGradient">
                                     <div className="magazineItemText">
                                         {data.text}
