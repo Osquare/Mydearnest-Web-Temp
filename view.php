@@ -22,12 +22,12 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 	    <meta property="al:ios:url" content="mydearnest://view?msgType=12&id=<?=$id?>&postType=0" />
 	    <meta property="al:ios:app_store_id" content="992731402" />
 	    <meta property="al:ios:app_name" content="집꾸미기" />
-	    
+
 	    <meta property="og:title" content=" 집꾸미기 " />
 	    <meta property="og:type" content="website" />
 	    <meta property="og:description" content="<?=$titleText?>" />
 	    <meta property="og:image" content="<?=$titleImage?>" />
-	
+
         <title>집꾸미기</title>
         <link rel="shortcut icon" type="image/png" href="/favicon.png">
         <!-- <link rel="alternate" href="android-app://com.osquare.mydearnest/mydearnest/view"/> -->
@@ -40,12 +40,12 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
         <script src="https://code.angularjs.org/1.3.13/angular-sanitize.min.js"></script>
-        
+
         <script src="./js/ng-infinite-scroll.min.js"></script>
         <script src="./js/imagesloaded.pkgd.min.js"></script>
         <script src="./js/controllers.js"></script>
     </head>
-    
+
     <body ng-controller="MagazineController">
         <div id="Header">
             <a id="HeaderLogoButton" href="./">
@@ -54,7 +54,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         </div>
         <div id="HeaderToApp">
           	<a id="HeaderAppLink" href="https://play.google.com/store/apps/details?id=com.osquare.mydearnest"
-            		class="magazineItem HeaderAppLink" target="_blank">	
+            		class="magazineItem HeaderAppLink" target="_blank">
             </a>
         </div>
         <div id="ContentWrapper">
@@ -63,14 +63,14 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
                 <div ng-bind-html="content" id="MagazineContent"></div>
                 <div id="MagazineImages">
                 	<div class="magazineContainer" ng-repeat="page in pages">
-                		<div class="magazineImage"> 
+                		<div class="magazineImage">
 	                        <img src="http://image.ggumim.co.kr/unsafe/{{page.image._id}}/{{page.image._id}}" width="100%">
 	                        <div class="imagePinWrapper" ng-style="{ top: pin.offset.y + '%', left: pin.offset.x + '%' }" ng-repeat="pin in page.pins">
 	                            <a class="imagePinMobileLink" href="#">
 	                                <img src="img/pin.png" height="20" class="imagePinMobile">
 	                            </a>
-	
-	                            <img src="img/pin.png" height="26" class="imagePin">  
+
+	                            <img src="img/pin.png" height="26" class="imagePin">
 	                            <div class="pinProductWrapper">
 	                                <img src="{{pin.contents.image}}" height="120" class="pinProductImage">
 	                                <div class="pinProductContent">
@@ -82,14 +82,14 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 	                        </div>
 	                    </div>
 	                    <div class="desc-for-magazineImage" ng-bind-html="bindText(page.article.text)">
-	                          	<!-- {{page.article.text}} --> 
+	                          	<!-- {{page.article.text}} -->
                         </div>
-                		
+
                 	</div>
-                    
+
                 </div>
             </div>
-        </div>	
+        </div>
 
         <div id="ProductPopupOverlayWrapper">
             <div id="ProductPopupOverlay"></div>
