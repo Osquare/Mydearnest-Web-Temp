@@ -47,7 +47,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1),
-	    $ = __webpack_require__(157);
+	    $ = __webpack_require__(157),
+	    Banner = __webpack_require__(158);
 
 	var App = React.createClass({
 		displayName: 'App',
@@ -55,8 +56,8 @@
 		render: function render() {
 			return React.createElement(
 				'div',
-				null,
-				'Hello ?'
+				{ id: 'Content', className: 'magazineWrapper clearfix' },
+				React.createElement(Banner, null)
 			);
 		}
 	});
@@ -29653,6 +29654,26 @@
 
 	}));
 
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1),
+	    $ = __webpack_require__(157);
+
+	var Banner = React.createClass({
+	    displayName: 'Banner',
+
+	    render: function render() {
+	        return React.createElement('a', { id: 'HeaderAppLink', href: 'https://play.google.com/store/apps/details?id=com.osquare.mydearnest',
+	            className: 'magazineItem HeaderAppLink', target: '_blank' });
+	    }
+	});
+
+	module.exports = Banner;
 
 /***/ }
 /******/ ]);
