@@ -12,7 +12,9 @@ var List = React.createClass({
     componentDidMount: function () {
         var that = this;
         $.get(API_URL, function (data) {
-            that.state.list = data.data;
+            that.setState({
+                list: data.data
+            });
         });
     },
     render: function () {
