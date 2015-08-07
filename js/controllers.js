@@ -1,1 +1,258 @@
-function GetURLParameter(t){for(var e=window.location.search.substring(1),a=e.split("&"),n=0;n<a.length;n++){var i=a[n].split("=");if(i[0]==t)return i[1]}}ResizeWindow=function(){var t=Math.floor($(window).width()/2)-1;$(window).width()<1024?($(".magazineItem:nth-child(1)").width($(window).width()),$(".magazineItem").slice(1).width(t)):($(".magazineItem:nth-child(2)").width($(window).width()),$(".magazineItem").slice(2).width(t)),$(".magazineItem").height(t)},PinClick=function(){var t=$(this).parent().find(".pinProductTitle").text(),e=$(this).parent().find(".pinProductPrice").text(),a=$(this).parent().find(".pinProductButton").attr("href"),n=$(this).parent().find(".pinProductImage").attr("src");return $("#ProductPopupTitle").text(t),$("#ProductPopupPrice").text(e),$("#ProductPopupButton").attr("href",a),$("#ProductPopupImage").attr("src",n),$("#ProductPopup").width("initial"),$("#ProductPopup").imagesLoaded(function(){$("#ProductPopupOverlayWrapper").addClass("active");var t=$("#ProductPopupOverlayWrapper").height()-$("#ProductPopup").height();if(100>t){var e=$("#ProductPopup").height()/$("#ProductPopup").width(),a=($("#ProductPopupOverlayWrapper").height()-60)/e;$("#ProductPopup").width(a+"px"),t=$("#ProductPopupOverlayWrapper").height()-$("#ProductPopup").height()}$("#ProductPopupWrapper").css("top",t/2+"px")}),!1},escapeHTML=function(t){return t.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace(/\n/gi,"<br>")},gotoApp=function(){var t=GetURLParameter("id"),e=new Date,a=navigator.userAgent.toLocaleLowerCase(),n=a.search("android")>-1,i=a.search("iphone")>-1,o=angular.element("#applink"),r="http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8",p="market://details?id=com.osquare.mydearnest",s="mydearnest://view?msgType=12&postType=0",c="mydearnest://view?msgType=12&id="+t+"&postType=0",d="mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",u="intent://view?msgType=12&id="+t+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",l=a.search("chrome")>-1&&navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split("/")[1]>25;GetURLParameter("isMarket")&&(console.log("hello market"),n?l?document.location.href=p:o.attr("src",p):i&&location.replace(r)),GetURLParameter("isShare")&&(setTimeout(function(){new Date-e<4e3&&(n?o.attr("src",p):i&&location.replace(r))},3e3),n?(kitkatWebview=-1!==a.indexOf("naver")||-1!==a.indexOf("daum"),l?document.location.href=t?u:d:o.attr("src",t?u:d)):i&&o.attr("src",t?c:s))},$(document).ready(function(){$(window).resize(ResizeWindow),$("#ProductPopupExit,#ProductPopupOverlay").click(function(){$("#ProductPopupOverlayWrapper").removeClass("active")})});var homedecoApp=angular.module("homedecoApp",["ngSanitize","infinite-scroll"]),API_URL="http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines",IMAGE_URL="http://image.ggumim.co.kr/unsafe/{id}/{id}",PageCount_URL="http://mydearnestapi-env.elasticbeanstalk.com/api/count/";homedecoApp.controller("MagazineListController",["$scope","$http","$timeout",function(t,e,a){t.magazines=[],t.scroll_busy=!0,t.last_id=null,t.intentID=GetURLParameter("id"),t.gotoApp=function(){location.href="?isShare=true"},e.put(PageCount_URL+"guest"),addMagazines=function(e){for(var n=0;n<e.data.length;n++){var i={id:e.data[n]._id,image_url:IMAGE_URL.replace(/{id}/gi,e.data[n].contents.title.image),text:escapeHTML(e.data[n].contents.title.text)};t.last_id=i.id,t.magazines.push(i)}e.data.length&&(t.scroll_busy=!1),a(ResizeWindow,0)},t.loadMore=function(){if(!t.scroll_busy){t.scroll_busy=!0;var a=API_URL+"?limit=10";t.last_id&&(a+="&current="+t.last_id),e.get(a).success(addMagazines)}},e.get(API_URL).success(addMagazines)}]),homedecoApp.controller("MagazineController",["$scope","$http","$timeout","$location",function(t,e,a){t.title="",t.content="",t.pages=[],t.intentID=GetURLParameter("id"),t.gotoApp=function(){location.href="?isShare=true"},angular.element("#HeaderAppLink").width($(window).width()).height($(window).width()/2),e.put(PageCount_URL+"page"),pinClickSetting=function(){$(".imagePinMobileLink").click(PinClick),$(".imagePinWrapper").hover(function(){var t=$(this).find(".pinProductImage").width()+$(this).find(".pinProductContent").width()+34;$(this).find(".pinProductWrapper").width(t)})},init=function(e){t.title=escapeHTML(e.data.contents.title.text),t.pages=angular.copy(e.data.contents.pages);for(var n=0;n<e.data.contents.pages.length;n++){t.pages[n].pins=[];for(var i=0;i<e.data.contents.pages[n].pins.length;i++)!e.data.contents.pages[n].pins[i].correct&&angular.isArray(e.data.contents.pages[n].pins[i].similars)&&e.data.contents.pages[n].pins[i].similars.length>0&&(e.data.contents.pages[n].pins[i].correct=e.data.contents.pages[n].pins[i].similars[0]),e.data.contents.pages[n].pins[i].correct&&(e.data.contents.pages[n].pins[i].correct.contents.image&&0!==e.data.contents.pages[n].pins[i].correct.contents.image.indexOf("http")&&(e.data.contents.pages[n].pins[i].correct.contents.image=IMAGE_URL.replace(/{id}/gi,e.data.contents.pages[n].pins[i].correct.contents.image)),t.pages[n].pins.push({offset:e.data.contents.pages[n].pins[i].offset,contents:e.data.contents.pages[n].pins[i].correct.contents}))}a(pinClickSetting,0)},t.bindText=function(t){return t?escapeHTML(t):void 0},e.get(API_URL+"/"+GetURLParameter("id")).success(init)}]),homedecoApp.directive("applink",["$timeout","$window",function(){return{restrict:"E",template:'<iframe style="display:none;"></iframe>',link:function(){gotoApp()}}}]);
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+        }
+    }
+};
+
+ResizeWindow = function() {
+    var width = Math.floor($(window).width()/2)-1;
+    if ($(window).width() < 1024) {
+    	$('.magazineItem:nth-child(1)').width($(window).width());
+    	$('.magazineItem').slice(1).width(width);
+    } else {
+	    $('.magazineItem:nth-child(2)').width($(window).width());
+	    $('.magazineItem').slice(2).width(width);
+    }
+    $('.magazineItem').height(width);
+};
+
+PinClick = function() {
+    var title = $(this).parent().find('.pinProductTitle').text();
+    var price = $(this).parent().find('.pinProductPrice').text();
+    var link = $(this).parent().find('.pinProductButton').attr('href');
+    var image = $(this).parent().find('.pinProductImage').attr('src');
+
+    $('#ProductPopupTitle').text(title);
+    $('#ProductPopupPrice').text(price);
+    $('#ProductPopupButton').attr('href', link);
+    $('#ProductPopupImage').attr('src', image);
+    $('#ProductPopup').width('initial');
+
+    $('#ProductPopup').imagesLoaded(function() {
+        $('#ProductPopupOverlayWrapper').addClass('active');
+        var position = $('#ProductPopupOverlayWrapper').height() - $('#ProductPopup').height();
+        if (position < 100) {
+            var ratio = $('#ProductPopup').height() / $('#ProductPopup').width();
+            var width = ($('#ProductPopupOverlayWrapper').height() - 60) / ratio;
+            $('#ProductPopup').width(width + 'px');
+            position = $('#ProductPopupOverlayWrapper').height() - $('#ProductPopup').height();
+        }
+        $('#ProductPopupWrapper').css('top', (position/2) + 'px');
+    });
+
+    return false;
+};
+
+escapeHTML = function(text) {
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
+};
+
+gotoApp = function () {
+    // 기본 변수 선언
+    var id = GetURLParameter('id'),
+        openAt = new Date,
+        uagentLow = navigator.userAgent.toLocaleLowerCase(),
+        isAndroid = uagentLow.search('android') > -1,
+        isiPhone = uagentLow.search('iphone') > -1,
+        iframe = angular.element('#applink'),
+        //iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+        iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+        AndMarket = 'market://details?id=com.osquare.mydearnest',
+        iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+        iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+        AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+        AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+        chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+
+    if (GetURLParameter('isMarket')) {
+        if (isAndroid) {
+        	document.location.href = AndMarket;
+        } else if (isiPhone) {
+            location.replace(iMarket);
+        }
+    }
+
+    if (GetURLParameter('isShare')) {
+        setTimeout(function () {
+            if (new Date - openAt < 4000) {
+                if (isAndroid) {
+                    iframe.attr('src', AndMarket);
+                } else if (isiPhone) {
+                    location.replace(iMarket);
+                }
+            }
+        }, 3000);
+
+        if (isAndroid) {
+            kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
+            if (chrome25) {
+                document.location.href = id ? AndroidLinkParam : AndroidLink;
+            } else {
+                iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
+            }
+        } else if (isiPhone) {
+            iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
+        }
+    }
+}
+
+$(document).ready(function() {
+    $(window).resize(ResizeWindow);
+
+    $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
+        $('#ProductPopupOverlayWrapper').removeClass('active');
+    });
+});
+
+var homedecoApp = angular.module('homedecoApp', ['ngSanitize', 'infinite-scroll']);
+var API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+var IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
+var PageCount_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/api/count/';
+
+homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+    $scope.magazines = [];
+    $scope.scroll_busy = true;
+    $scope.last_id = null;
+    $scope.intentID = GetURLParameter('id');
+
+    // // 앱링크
+    // if (/Android/i.test(navigator.userAgent)) {
+    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
+	// } else if (/iPhone/i.test(navigator.userAgent)) {
+	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
+	// 	angular.element('.HeaderAppLink').click(function(e) {
+	// 		e.preventDefault();
+	// 		$timeout(function() {
+	// 			var iframe = angular.element('<iframe></iframe>');
+	// 			iframe.attr('src', intentLink);
+	// 			iframe.appendTo('body');
+	// 			$timeout(function() {
+	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
+	// 			}, 500);
+	// 		}, 500);
+	// 	});
+	// }
+	gotoApp();
+    $scope.gotoApp = function () {
+        location.href = '?isShare=true';
+    };
+
+    // Guest Count
+	$http.put(PageCount_URL + 'guest');
+
+    addMagazines = function(data) {
+        for (var i = 0; i < data.data.length; i++) {
+            var item = {
+                id: data.data[i]._id,
+                image_url: IMAGE_URL.replace(/{id}/gi, data.data[i].contents.title.image),
+                text: escapeHTML(data.data[i].contents.title.text)
+            };
+            $scope.last_id = item.id;
+            $scope.magazines.push(item);
+        }
+        if (data.data.length) {
+            $scope.scroll_busy = false;
+        }
+        $timeout(ResizeWindow, 0);
+    };
+    $scope.loadMore = function() {
+        if ($scope.scroll_busy) {
+            return;
+        }
+        $scope.scroll_busy = true;
+        var url = API_URL + '?limit=10';
+        if ($scope.last_id) {
+            url += '&current=' + $scope.last_id;
+        }
+        $http.get(url).success(addMagazines);
+    };
+
+    $http.get(API_URL).success(addMagazines);
+}]);
+
+homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$location', function ($scope, $http, $timeout, $location) {
+    $scope.title = '';
+    $scope.content = '';
+    $scope.pages = [];
+    $scope.intentID = GetURLParameter('id');
+
+    // if (/Android/i.test(navigator.userAgent)) {
+    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
+	// } else if (/iPhone/i.test(navigator.userAgent)) {
+	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
+	// 	angular.element('.HeaderAppLink').click(function(e) {
+	// 		e.preventDefault();
+	// 		$timeout(function() {
+	// 			var iframe = angular.element('<iframe></iframe>');
+	// 			iframe.attr('src', intentLink);
+	// 			iframe.appendTo('body');
+	// 			$timeout(function() {
+	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
+	// 			}, 500);
+	// 		}, 500);
+	// 	});
+	// }
+	gotoApp();
+    $scope.gotoApp = function () {
+        location.href = '?isShare=true&id=' + GetURLParameter('id');
+    };
+
+
+	angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
+
+    // Page Count
+	$http.put(PageCount_URL + 'page');
+
+    pinClickSetting = function() {
+        $('.imagePinMobileLink').click(PinClick);
+
+        $('.imagePinWrapper').hover(function() {
+            var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
+            $(this).find('.pinProductWrapper').width(width);
+        });
+    };
+
+    init = function(data) {
+    	$scope.title = escapeHTML(data.data.contents.title.text);
+        $scope.pages = angular.copy(data.data.contents.pages);
+
+        for (var i = 0; i < data.data.contents.pages.length; i++) {
+        	$scope.pages[i].pins = [];
+            for (var j = 0; j < data.data.contents.pages[i].pins.length; j++) {
+            	if (!data.data.contents.pages[i].pins[j].correct
+            		&& angular.isArray(data.data.contents.pages[i].pins[j].similars)
+            		&& data.data.contents.pages[i].pins[j].similars.length > 0) {
+            		data.data.contents.pages[i].pins[j].correct = data.data.contents.pages[i].pins[j].similars[0];
+        		}
+            	if (data.data.contents.pages[i].pins[j].correct) {
+            		if (data.data.contents.pages[i].pins[j].correct.contents.image
+            			&& data.data.contents.pages[i].pins[j].correct.contents.image.indexOf('http') !== 0) {
+            				data.data.contents.pages[i].pins[j].correct.contents.image =
+            					IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image);
+        			}
+            		$scope.pages[i].pins.push({
+            			offset: data.data.contents.pages[i].pins[j].offset,
+            			contents: data.data.contents.pages[i].pins[j].correct.contents
+            		});
+            	}
+            }
+        }
+
+        $timeout(pinClickSetting, 0);
+    };
+
+    $scope.bindText = function (text) {
+    	if (text) {
+    		return escapeHTML(text);
+    	};
+    }
+
+    $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
+}]);
