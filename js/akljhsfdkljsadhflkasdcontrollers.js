@@ -210,19 +210,22 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
                 isAndroid = uagentLow.search('android') > -1,
                 isiPhone = uagentLow.search('iphone') > -1,
                 iframe = el.find('iframe'),
-                chrome25 = false,
-                kitkatWebview = false,
                 iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
                 AndMarket = 'market://details?id=com.osquare.mydearnest',
                 iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
                 iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
                 AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-                AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+                AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+                chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
 
             if (GetURLParameter('isMarket')) {
                 if (isAndroid) {
-                    iframe.attr('src', AndMarket);
+                    if (chrome25) {
+                        document.location.href = AndMarket;
+                    } else {
+                        iframe.attr('src', AndMarket);
+                    }
                 } else if (isiPhone) {
                     location.replace(iMarket);
                 }
@@ -240,7 +243,6 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 	    	    }, 3000);
 
 		    	if (isAndroid) {
-		    		chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 		    		kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
 
 		    		if (chrome25) {
