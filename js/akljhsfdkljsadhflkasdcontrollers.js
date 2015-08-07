@@ -60,7 +60,8 @@ gotoApp = function () {
         isAndroid = uagentLow.search('android') > -1,
         isiPhone = uagentLow.search('iphone') > -1,
         iframe = angular.element('#applink'),
-        iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+        //iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+        iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
         AndMarket = 'market://details?id=com.osquare.mydearnest',
         iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
         iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
@@ -69,13 +70,8 @@ gotoApp = function () {
         chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
     if (GetURLParameter('isMarket')) {
-        console.log('hello market');
         if (isAndroid) {
-            if (chrome25) {
-                document.location.href = AndMarket;
-            } else {
-                iframe.attr('src', AndMarket);
-            }
+        	document.location.href = AndMarket;
         } else if (isiPhone) {
             location.replace(iMarket);
         }
@@ -142,6 +138,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
 	// 		}, 500);
 	// 	});
 	// }
+	gotoApp();
     $scope.gotoApp = function () {
         location.href = '?isShare=true';
     };
@@ -202,8 +199,9 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
 	// 		}, 500);
 	// 	});
 	// }
+	gotoApp();
     $scope.gotoApp = function () {
-        location.href = '?isShare=true';
+        location.href = '?isShare=true&id=' + GetURLParameter('id');
     };
 
 
@@ -257,13 +255,4 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     }
 
     $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
-}]);
-homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $window) {
-	return {
-		restrict: 'E',
-		template: '<iframe style="display:none;"></iframe>',
-		link: function(scope, el, attr) {
-            gotoApp();
-		}
-	}
 }]);
