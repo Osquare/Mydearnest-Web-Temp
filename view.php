@@ -53,8 +53,8 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
             </a>
         </div>
         <div id="HeaderToApp">
-          	<a id="HeaderAppLink" href="https://play.google.com/store/apps/details?id=com.osquare.mydearnest"
-            		class="magazineItem HeaderAppLink" target="_blank">
+            <a id="HeaderAppLink" href="" ng-click="gotoApp();"
+                class="magazineItem HeaderAppLink">
             </a>
         </div>
         <div id="ContentWrapper">
@@ -124,4 +124,3 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         </script>
     </body>
 </html>
-

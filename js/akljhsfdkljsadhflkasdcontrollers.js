@@ -52,6 +52,59 @@ escapeHTML = function(text) {
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
 };
 
+gotoApp = function () {
+    // 기본 변수 선언
+    var id = GetURLParameter('id'),
+        openAt = new Date,
+        uagentLow = navigator.userAgent.toLocaleLowerCase(),
+        isAndroid = uagentLow.search('android') > -1,
+        isiPhone = uagentLow.search('iphone') > -1,
+        iframe = angular.element('#applink'),
+        iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+        AndMarket = 'market://details?id=com.osquare.mydearnest',
+        iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+        iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+        AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+        AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+        chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+
+    if (GetURLParameter('isMarket')) {
+        console.log('hello market');
+        if (isAndroid) {
+            if (chrome25) {
+                document.location.href = AndMarket;
+            } else {
+                iframe.attr('src', AndMarket);
+            }
+        } else if (isiPhone) {
+            location.replace(iMarket);
+        }
+    }
+
+    if (GetURLParameter('isShare')) {
+        setTimeout(function () {
+            if (new Date - openAt < 4000) {
+                if (isAndroid) {
+                    iframe.attr('src', AndMarket);
+                } else if (isiPhone) {
+                    location.replace(iMarket);
+                }
+            }
+        }, 3000);
+
+        if (isAndroid) {
+            kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
+            if (chrome25) {
+                document.location.href = id ? AndroidLinkParam : AndroidLink;
+            } else {
+                iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
+            }
+        } else if (isiPhone) {
+            iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
+        }
+    }
+}
+
 $(document).ready(function() {
     $(window).resize(ResizeWindow);
 
@@ -71,24 +124,27 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
 
-    // 앱링크
-    if (/Android/i.test(navigator.userAgent)) {
-    	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
-		angular.element('.HeaderAppLink').attr('href', intentLink);
-	} else if (/iPhone/i.test(navigator.userAgent)) {
-		var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
-		angular.element('.HeaderAppLink').click(function(e) {
-			e.preventDefault();
-			$timeout(function() {
-				var iframe = angular.element('<iframe></iframe>');
-				iframe.attr('src', intentLink);
-				iframe.appendTo('body');
-				$timeout(function() {
-					location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
-				}, 500);
-			}, 500);
-		});
-	}
+    // // 앱링크
+    // if (/Android/i.test(navigator.userAgent)) {
+    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
+	// } else if (/iPhone/i.test(navigator.userAgent)) {
+	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
+	// 	angular.element('.HeaderAppLink').click(function(e) {
+	// 		e.preventDefault();
+	// 		$timeout(function() {
+	// 			var iframe = angular.element('<iframe></iframe>');
+	// 			iframe.attr('src', intentLink);
+	// 			iframe.appendTo('body');
+	// 			$timeout(function() {
+	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
+	// 			}, 500);
+	// 		}, 500);
+	// 	});
+	// }
+    $scope.gotoApp = function () {
+        location.href = '?isShare=true';
+    };
 
     // Guest Count
 	$http.put(PageCount_URL + 'guest');
@@ -129,23 +185,27 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
 
-    if (/Android/i.test(navigator.userAgent)) {
-    	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
-		angular.element('.HeaderAppLink').attr('href', intentLink);
-	} else if (/iPhone/i.test(navigator.userAgent)) {
-		var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
-		angular.element('.HeaderAppLink').click(function(e) {
-			e.preventDefault();
-			$timeout(function() {
-				var iframe = angular.element('<iframe></iframe>');
-				iframe.attr('src', intentLink);
-				iframe.appendTo('body');
-				$timeout(function() {
-					location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
-				}, 500);
-			}, 500);
-		});
-	}
+    // if (/Android/i.test(navigator.userAgent)) {
+    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
+	// } else if (/iPhone/i.test(navigator.userAgent)) {
+	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
+	// 	angular.element('.HeaderAppLink').click(function(e) {
+	// 		e.preventDefault();
+	// 		$timeout(function() {
+	// 			var iframe = angular.element('<iframe></iframe>');
+	// 			iframe.attr('src', intentLink);
+	// 			iframe.appendTo('body');
+	// 			$timeout(function() {
+	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
+	// 			}, 500);
+	// 		}, 500);
+	// 	});
+	// }
+    $scope.gotoApp = function () {
+        location.href = '?isShare=true';
+    };
+
 
 	angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
 
@@ -203,65 +263,7 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 		restrict: 'E',
 		template: '<iframe style="display:none;"></iframe>',
 		link: function(scope, el, attr) {
-            // 기본 변수 선언
-            var id = GetURLParameter('id'),
-                openAt = new Date,
-                uagentLow = navigator.userAgent.toLocaleLowerCase(),
-                isAndroid = uagentLow.search('android') > -1,
-                isiPhone = uagentLow.search('iphone') > -1,
-                iframe = el.find('iframe'),
-                iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
-                AndMarket = 'market://details?id=com.osquare.mydearnest',
-                iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
-                iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
-                AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-                AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
-                chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
-
-
-            if (GetURLParameter('isMarket')) {
-                if (isAndroid) {
-                    if (chrome25) {
-                        document.location.href = AndMarket;
-                    } else {
-                        iframe.attr('src', AndMarket);
-                    }
-                } else if (isiPhone) {
-                    location.replace(iMarket);
-                }
-            }
-
-		    if (GetURLParameter('isShare')) {
-	    	    $timeout(function () {
-	    	    	if (new Date - openAt < 4000) {
-	    	    		if (isAndroid) {
-	    	    			iframe.attr('src', AndMarket);
-	    	    		} else if (isiPhone) {
-	    	    			location.replace(iMarket);
-	    	    		}
-	    	    	}
-	    	    }, 3000);
-
-		    	if (isAndroid) {
-		    		kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
-
-		    		if (chrome25) {
-		    			if (id) {
-		    				document.location.href = AndroidLinkParam;
-		    			} else {
-		    				document.location.href = AndroidLink;
-		    			}
-		    		} else {
-		    			iframe.attr('src', 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end');
-		    		}
-		    	} else if (isiPhone) {
-		    		if (id) {
-		    			iframe.attr('src', iPhoneLinkParam);
-		    		} else {
-		    			iframe.attr('src', iPhoneLink);
-		    		}
-		    	}
-		    }
+            gotoApp();
 		}
 	}
 }]);
