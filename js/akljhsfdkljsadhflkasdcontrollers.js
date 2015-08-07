@@ -220,7 +220,7 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
                 AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
 
 
-            if (GetUrlParameter('isMarket')) {
+            if (GetURLParameter('isMarket')) {
                 if (isAndroid) {
                     iframe.attr('src', AndMarket);
                 } else if (isiPhone) {
