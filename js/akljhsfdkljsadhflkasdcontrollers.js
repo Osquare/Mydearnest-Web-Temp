@@ -16,7 +16,7 @@ ResizeWindow = function() {
     	$('.magazineItem').slice(1).width(width);
     } else {
 	    $('.magazineItem:nth-child(2)').width($(window).width());
-	    $('.magazineItem').slice(2).width(width);	
+	    $('.magazineItem').slice(2).width(width);
     }
     $('.magazineItem').height(width);
 };
@@ -70,8 +70,8 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.scroll_busy = true;
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
-    
-    // 앱링크 
+
+    // 앱링크
     if (/Android/i.test(navigator.userAgent)) {
     	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
 		angular.element('.HeaderAppLink').attr('href', intentLink);
@@ -89,7 +89,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
 			}, 500);
 		});
 	}
-    
+
     // Guest Count
 	$http.put(PageCount_URL + 'guest');
 
@@ -128,7 +128,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     $scope.content = '';
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
-    
+
     if (/Android/i.test(navigator.userAgent)) {
     	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
 		angular.element('.HeaderAppLink').attr('href', intentLink);
@@ -146,9 +146,9 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
 			}, 500);
 		});
 	}
-	
+
 	angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
-    
+
     // Page Count
 	$http.put(PageCount_URL + 'page');
 
@@ -164,7 +164,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     init = function(data) {
     	$scope.title = escapeHTML(data.data.contents.title.text);
         $scope.pages = angular.copy(data.data.contents.pages);
-		
+
         for (var i = 0; i < data.data.contents.pages.length; i++) {
         	$scope.pages[i].pins = [];
             for (var j = 0; j < data.data.contents.pages[i].pins.length; j++) {
@@ -177,7 +177,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
             		if (data.data.contents.pages[i].pins[j].correct.contents.image
             			&& data.data.contents.pages[i].pins[j].correct.contents.image.indexOf('http') !== 0) {
             				data.data.contents.pages[i].pins[j].correct.contents.image =
-            					IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image); 
+            					IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image);
         			}
             		$scope.pages[i].pins.push({
             			offset: data.data.contents.pages[i].pins[j].offset,
@@ -186,10 +186,10 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
             	}
             }
         }
-        
+
         $timeout(pinClickSetting, 0);
     };
-    
+
     $scope.bindText = function (text) {
     	if (text) {
     		return escapeHTML(text);
@@ -216,7 +216,7 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 		    	    iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
 		    	    AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
 		    	    AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
-		    	    
+
 	    	    $timeout(function () {
 	    	    	if (new Date - openAt < 4000) {
 	    	    		if (isAndroid) {
@@ -226,11 +226,11 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 	    	    		}
 	    	    	}
 	    	    }, 3000);
-		    	    
+
 		    	if (isAndroid) {
 		    		chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 		    		kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
-		    		
+
 		    		if (chrome25) {
 		    			if (id) {
 		    				document.location.href = AndroidLinkParam;
@@ -246,7 +246,7 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 		    		} else {
 		    			iframe.attr('src', iPhoneLink);
 		    		}
-		    	}   
+		    	}
 		    }
 		}
 	}
