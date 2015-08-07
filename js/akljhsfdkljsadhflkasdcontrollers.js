@@ -203,26 +203,38 @@ homedecoApp.directive('applink', ['$timeout', '$window', function($timeout, $win
 		restrict: 'E',
 		template: '<iframe style="display:none;"></iframe>',
 		link: function(scope, el, attr) {
-		    if (GetURLParameter('isShare')) {
-		    	var id = GetURLParameter('id'),
-		    		openAt = new Date,
-		    		uagentLow = navigator.userAgent.toLocaleLowerCase(),
-					isAndroid = uagentLow.search('android') > -1,
-					isiPhone = uagentLow.search('iphone') > -1,
-		    		iframe = el.find('iframe'),
-		    		chrome25 = false,
-		    		kitkatWebview = false,
-		    	    iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
-		    	    iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
-		    	    AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-		    	    AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+            // 기본 변수 선언
+            var id = GetURLParameter('id'),
+                openAt = new Date,
+                uagentLow = navigator.userAgent.toLocaleLowerCase(),
+                isAndroid = uagentLow.search('android') > -1,
+                isiPhone = uagentLow.search('iphone') > -1,
+                iframe = el.find('iframe'),
+                chrome25 = false,
+                kitkatWebview = false,
+                iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+                AndMarket = 'market://details?id=com.osquare.mydearnest',
+                iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+                iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+                AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+                AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
 
+
+            if (GetUrlParameter('isMarket')) {
+                if (isAndroid) {
+                    iframe.attr('src', AndMarket);
+                } else if (isiPhone) {
+                    location.replace(iMarket);
+                }
+            }
+
+		    if (GetURLParameter('isShare')) {
 	    	    $timeout(function () {
 	    	    	if (new Date - openAt < 4000) {
 	    	    		if (isAndroid) {
-	    	    			iframe.attr('src', 'market://details?id=com.osquare.mydearnest');
+	    	    			iframe.attr('src', AndMarket);
 	    	    		} else if (isiPhone) {
-	    	    			location.replace('http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8');
+	    	    			location.replace(iMarket);
 	    	    		}
 	    	    	}
 	    	    }, 3000);
