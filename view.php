@@ -43,7 +43,6 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 
         <script src="./js/ng-infinite-scroll.min.js"></script>
         <script src="./js/imagesloaded.pkgd.min.js"></script>
-        <script src="./js/controllers.js"></script>
     </head>
 
     <body ng-controller="MagazineController">
@@ -112,7 +111,8 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
             </div>
         </div>
 
-		<applink></applink>
+		<iframe id="applink"></iframe>	
+		<script src="./js/controllers.js"></script>
         <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
