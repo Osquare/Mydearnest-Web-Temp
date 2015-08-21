@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    </head>
+    <body>
+        <iframe id="applink"></iframe>
+        <script type="text/javascript">
+            var iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+                iMarket2 = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
+                AndMarket = 'market://details?id=com.osquare.mydearnest',
+                iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+                // iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+                AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
+                // AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
+
+            setTimeout(function () {
+                $('#applink').attr('src', iMarket2);
+            }, 2000);
+        </script>
+    </body>
+</html>

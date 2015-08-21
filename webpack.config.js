@@ -12,5 +12,9 @@ module.exports = {
 				loader: 'babel'
 			}
 		]
+	},
+	devServer: {
+		port: 3002,
+		historyApiFallback: true
 	}
 };
