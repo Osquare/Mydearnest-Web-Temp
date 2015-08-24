@@ -119,25 +119,8 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.scroll_busy = true;
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
+    $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-    // // 앱링크
-    // if (/Android/i.test(navigator.userAgent)) {
-    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
-	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
-	// } else if (/iPhone/i.test(navigator.userAgent)) {
-	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
-	// 	angular.element('.HeaderAppLink').click(function(e) {
-	// 		e.preventDefault();
-	// 		$timeout(function() {
-	// 			var iframe = angular.element('<iframe></iframe>');
-	// 			iframe.attr('src', intentLink);
-	// 			iframe.appendTo('body');
-	// 			$timeout(function() {
-	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
-	// 			}, 500);
-	// 		}, 500);
-	// 	});
-	// }
 	gotoApp();
     $scope.gotoApp = function () {
         location.href = '?isShare=true';
@@ -181,24 +164,8 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     $scope.content = '';
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
+    $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-    // if (/Android/i.test(navigator.userAgent)) {
-    // 	var intentLink = "mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end";
-	// 	angular.element('.HeaderAppLink').attr('href', intentLink);
-	// } else if (/iPhone/i.test(navigator.userAgent)) {
-	// 	var intentLink = 'mydearnest://view?msgType=12&id='+ $scope.intentID +'&postType=0';
-	// 	angular.element('.HeaderAppLink').click(function(e) {
-	// 		e.preventDefault();
-	// 		$timeout(function() {
-	// 			var iframe = angular.element('<iframe></iframe>');
-	// 			iframe.attr('src', intentLink);
-	// 			iframe.appendTo('body');
-	// 			$timeout(function() {
-	// 				location.href = 'https://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8';
-	// 			}, 500);
-	// 		}, 500);
-	// 	});
-	// }
 	gotoApp();
     $scope.gotoApp = function () {
         location.href = '?isShare=true&id=' + GetURLParameter('id');

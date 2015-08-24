@@ -51,7 +51,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
                 <img id="HeaderLogo" height="30" src="./img/logo.png" alt="집꾸미기">
             </a>
         </div>
-        <div id="HeaderToApp">
+        <div id="HeaderToApp" ng-if="!noBanner">
             <a id="HeaderAppLink" href="" ng-click="gotoApp();"
                 class="magazineItem HeaderAppLink">
             </a>

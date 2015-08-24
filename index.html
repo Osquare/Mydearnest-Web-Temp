@@ -42,7 +42,7 @@
         <div infinite-scroll="loadMore()" infinite-scroll-disabled="scroll_busy" infinite-scroll-distance="2" id="ContentWrapper" class="clearfix">
             <div id="Content" class="magazineWrapper clearfix">
             	<a id="HeaderAppLink" href="" ng-click="gotoApp();"
-            		class="magazineItem HeaderAppLink">
+            		class="magazineItem HeaderAppLink" ng-if="!noBanner">
             	</a>
                 <a class="magazineItem" href="./view.php?id={{magazine.id}}" ng-style="{ 'background-image': 'url(' + magazine.image_url + ')' }" ng-repeat="magazine in magazines">
                     <div class="magazineItemGradient">
