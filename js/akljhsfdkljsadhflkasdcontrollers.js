@@ -119,7 +119,6 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.scroll_busy = true;
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
-    $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
 	gotoApp();
     $scope.gotoApp = function () {
