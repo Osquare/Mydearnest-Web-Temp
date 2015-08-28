@@ -66,7 +66,7 @@ gotoApp = function () {
         iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
         iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
         AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-        AndroidLinkParam = "intent://view?msgType=12&id="+id+"&postType=0/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+        AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
         chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
     if (GetURLParameter('isMarket')) {
