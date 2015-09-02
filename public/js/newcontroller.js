@@ -130,6 +130,8 @@ homedecoApp
       $urlRouterProvider.otherwise('/');
       $locationProvider.html5Mode(true);
 
+      console.log('run');
+
       $stateProvider
         .state('main', {
           url: '/',
@@ -144,14 +146,12 @@ homedecoApp
     }])
   .run(['$http', function ($http) {
     var from = GetURLParameter('from');
-    console.log('hello');
 
     // Guest Count
     $http.put(PageCount_URL + 'guest?from=' + from);
   }]);
 
 homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
-  console.log('hello');
   $scope.magazines = [];
   $scope.scroll_busy = true;
   $scope.last_id = null;
@@ -162,7 +162,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     location.href = '?isShare=true';
   };
 
-  addMagazines = function(data) {
+  var addMagazines = function(data) {
     for (var i = 0; i < data.data.length; i++) {
       var item = {
         id: data.data[i]._id,
@@ -210,7 +210,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
   // Page Count
   $http.put(PageCount_URL + 'page');
 
-  pinClickSetting = function() {
+  var pinClickSetting = function() {
     $('.imagePinMobileLink').click(PinClick);
 
     $('.imagePinWrapper').hover(function() {
@@ -219,7 +219,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     });
   };
 
-  init = function(data) {
+  var init = function(data) {
     $scope.title = escapeHTML(data.data.contents.title.text);
     $scope.pages = angular.copy(data.data.contents.pages);
 
