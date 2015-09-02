@@ -33,17 +33,17 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <!-- <link rel="alternate" href="android-app://com.osquare.mydearnest/mydearnest/view"/> -->
         <link href="http://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css">
 
-        <link rel="stylesheet" href="css/reset.css">
-        <link rel="stylesheet" href="css/common.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/view.css">
+        <link rel="stylesheet" href="public/css/reset.css">
+        <link rel="stylesheet" href="public/css/common.css">
+        <link rel="stylesheet" href="public/css/main.css">
+        <link rel="stylesheet" href="public/css/view.css">
 
         <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
-        <script src="./js/ng-ui-router.js"></script>
+        <script src="public/js/ng-ui-router.js"></script>
         <script src="https://code.angularjs.org/1.2.14/angular-sanitize.min.js"></script>
-        <script src="./js/byposting_cpc_sdk.js"></script>
-        <script src="./js/ng-infinite-scroll.min.js"></script>
+        <script src="public/js/byposting_cpc_sdk.js"></script>
+        <script src="public/js/ng-infinite-scroll.min.js"></script>
         <!-- <script src="./js/main.js"></script> -->
     </head>
     <body ng-app="homedecoApp">
@@ -56,7 +56,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 
         <iframe id="applink"></iframe>
 
-        <script src="./js/newcontroller.js"></script>
+        <script src="public/js/newcontroller.js"></script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
