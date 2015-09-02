@@ -4,7 +4,7 @@
             <a id="HeaderAppLink" href="" ng-click="gotoApp();"
                class="magazineItem HeaderAppLink">
             </a>
-            <a class="magazineItem" href="./view2.php?id={{magazine.id}}" ng-style="{ 'background-image': 'url(' + magazine.image_url + ')' }" ng-repeat="magazine in magazines">
+            <a class="magazineItem" href="./view.php?id={{magazine.id}}" ng-style="{ 'background-image': 'url(' + magazine.image_url + ')' }" ng-repeat="magazine in magazines">
                 <div class="magazineItemGradient">
                     <div ng-bind-html="magazine.text" class="magazineItemText"></div>
                 </div>
