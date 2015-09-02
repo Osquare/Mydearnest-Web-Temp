@@ -99,7 +99,7 @@ gotoApp = function () {
             iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
         }
     }
-}
+};
 
 $(document).ready(function() {
     $(window).resize(ResizeWindow);
@@ -218,7 +218,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     	if (text) {
     		return escapeHTML(text);
     	};
-    }
+    };
 
     $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
 }]);
