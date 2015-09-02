@@ -12,6 +12,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 <!doctype html>
 <html>
     <head>
+        <base href="/" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="google-site-verification" content="7sqJZttErhMhQMJzVkSpmwXqWdSL66rd6NF5L6au4_0" />
@@ -49,7 +50,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
     <body ng-app="homedecoApp">
         <div id="Header">
             <a id="HeaderLogoButton" href="./">
-                <img id="HeaderLogo" height="30" src="./img/logo.png" alt="집꾸미기">
+                <img id="HeaderLogo" height="30" src=".public/img/logo.png" alt="집꾸미기">
             </a>
         </div>
         <div ui-view=""></div>
