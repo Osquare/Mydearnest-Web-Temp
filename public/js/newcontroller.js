@@ -75,7 +75,7 @@ var shareType = function (type) {
 
 var test = function () {
   var id = GetURLParameter('id'),
-    type = GetURLParameter('isShare'),
+    type = GetURLParameter('test'),
     openAt = new Date,
     uagentLow = navigator.userAgent.toLocaleLowerCase(),
     isAndroid = uagentLow.search('android') > -1,
@@ -84,6 +84,7 @@ var test = function () {
     iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
     AndMarket = 'market://details?id=com.osquare.mydearnest',
     Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
     chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
   if (GetURLParameter('isMarket')) {
@@ -94,13 +95,13 @@ var test = function () {
     }
   }
 
-  if (GetURLParameter('isShare')) {
+  if (GetURLParameter('test')) {
     setTimeout(function () {
       if (new Date - openAt < 4000) {
         if (isAndroid) {
           iframe.attr('src', AndMarket);
         } else if (isiPhone) {
-          location.replace(iMarket);
+          location.replace(Link);
         }
       }
     }, 3000);
@@ -109,10 +110,10 @@ var test = function () {
       if (chrome25) {
         document.location.href = Link;
       } else {
-        iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
+        iframe.attr('src', LinkAnd);
       }
     } else if (isiPhone) {
-      iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
+      iframe.attr('src', Link);
     }
   }
 };
@@ -129,7 +130,7 @@ var gotoApp = function () {
     iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
     AndMarket = 'market://details?id=com.osquare.mydearnest',
     //Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
-    AndriodParam = '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+    //AndriodParam = '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
     iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
     iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
     AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
@@ -157,7 +158,7 @@ var gotoApp = function () {
 
     if (isAndroid) {
       if (chrome25) {
-        document.location.href = Link;
+        document.location.href = id ? AndroidLinkParam : AndroidLink;
       } else {
         iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
       }
@@ -190,8 +191,6 @@ homedecoApp
       $urlRouterProvider.otherwise('/');
       $locationProvider.html5Mode(true);
 
-      console.log('run');
-
       $stateProvider
         .state('main', {
           url: '/',
@@ -205,10 +204,13 @@ homedecoApp
         });
     }])
   .run(['$http', function ($http) {
-    var from = GetURLParameter('from');
+    var referrer = GetURLParameter('referrer');
 
     // Guest Count
-    $http.put(PageCount_URL + 'guest?from=' + from);
+    $http.put(PageCount_URL + 'guest?referrer=' + referrer);
+
+    // App Link
+    test();
   }]);
 
 homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
