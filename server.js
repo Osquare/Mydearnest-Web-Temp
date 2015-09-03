@@ -10,8 +10,9 @@ app.use(function (res, req, next) {
 	res.header('Pragma', 'no-cache');
 });
 
-app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname + '/withRouter.html'));
+app.get('*', function (req, res) {
+	console.log('get / ');
+	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.listen(3002);
