@@ -135,12 +135,12 @@ homedecoApp
       $stateProvider
         .state('main', {
           url: '/',
-          templateUrl: '../components/main.html',
+          templateUrl: '../public/components/main.html',
           controller: 'MagazineListController'
         })
         .state('detail', {
           url: '/view.php',
-          templateUrl: '../components/detail.html',
+          templateUrl: '../public/components/detail.html',
           controller: 'MagazineController'
         });
     }])

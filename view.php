@@ -50,7 +50,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
     <body ng-app="homedecoApp">
         <div id="Header">
             <a id="HeaderLogoButton" href="./">
-                <img id="HeaderLogo" height="30" src=".public/img/logo.png" alt="집꾸미기">
+                <img id="HeaderLogo" height="30" src="./public/img/logo.png" alt="집꾸미기">
             </a>
         </div>
         <div ui-view=""></div>
