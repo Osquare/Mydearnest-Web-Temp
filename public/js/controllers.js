@@ -135,39 +135,29 @@ var test_android = function () {
     AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
     chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
-  if (GetURLParameter('isMarket')) {
-    if (isAndroid) {
-      document.location.href = AndMarket;
-    } else if (isiPhone) {
-      location.replace(iMarket);
-    }
-  }
-
-  if (GetURLParameter('isShare')) {
-    setTimeout(function () {
-      if (new Date - openAt < 4000) {
-        if (isAndroid) {
-          //iframe.attr('src', AndMarket);
-          alert('and market');
-        } else if (isiPhone) {
-          alert('iphone market');
-          //location.replace(iMarket);
-        }
+  setTimeout(function () {
+    if (new Date - openAt < 4000) {
+      if (isAndroid) {
+        //iframe.attr('src', AndMarket);
+        alert('and market');
+      } else if (isiPhone) {
+        alert('iphone market');
+        //location.replace(iMarket);
       }
-    }, 3000);
-
-    if (isAndroid) {
-      if (chrome25) {
-        alert('in chrome 25');
-        //document.location.href = id ? AndroidLinkParam : AndroidLink;
-      } else {
-        alert('in just chrome');
-        //iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
-      }
-    } else if (isiPhone) {
-      alert('in iphone');
-      //iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
     }
+  }, 3000);
+
+  if (isAndroid) {
+    if (chrome25) {
+      alert('in chrome 25');
+      //document.location.href = id ? AndroidLinkParam : AndroidLink;
+    } else {
+      alert('in just chrome');
+      //iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
+    }
+  } else if (isiPhone) {
+    alert('in iphone');
+    //iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
   }
 };
 
@@ -263,7 +253,7 @@ homedecoApp
     $http.put(PageCount_URL + 'guest?referrer=' + referrer || '');
 
     // App Link
-    test_withType();
+    // test_withType();
     if (GetURLParameter('test')) {
       test_android();
     }
