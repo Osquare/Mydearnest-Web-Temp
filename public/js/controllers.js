@@ -201,7 +201,8 @@ var gotoApp = function () {
 
     if (isAndroid) {
       if (chrome25) {
-        document.location.href = id ? AndroidLinkParam : AndroidLink;
+        //document.location.href = id ? AndroidLinkParam : AndroidLink;
+        iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
       } else {
         iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
       }
