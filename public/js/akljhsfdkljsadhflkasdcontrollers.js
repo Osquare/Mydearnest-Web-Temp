@@ -1,3 +1,9 @@
+/**
+ * Created by youngmoon on 9/2/15.
+ */
+
+'use strict';
+
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
@@ -9,19 +15,19 @@ function GetURLParameter(sParam) {
     }
 };
 
-ResizeWindow = function() {
+var ResizeWindow = function() {
     var width = Math.floor($(window).width()/2)-1;
     if ($(window).width() < 1024) {
-    	$('.magazineItem:nth-child(1)').width($(window).width());
-    	$('.magazineItem').slice(1).width(width);
+        $('.magazineItem:nth-child(1)').width($(window).width());
+        $('.magazineItem').slice(1).width(width);
     } else {
-	    $('.magazineItem:nth-child(2)').width($(window).width());
-	    $('.magazineItem').slice(2).width(width);
+        $('.magazineItem:nth-child(2)').width($(window).width());
+        $('.magazineItem').slice(2).width(width);
     }
     $('.magazineItem').height(width);
 };
 
-PinClick = function() {
+var PinClick = function() {
     var title = $(this).parent().find('.pinProductTitle').text();
     var price = $(this).parent().find('.pinProductPrice').text();
     var link = $(this).parent().find('.pinProductButton').attr('href');
@@ -48,30 +54,145 @@ PinClick = function() {
     return false;
 };
 
-escapeHTML = function(text) {
+var escapeHTML = function(text) {
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
 };
 
-gotoApp = function () {
-    // 기본 변수 선언
+var shareType = function (type) {
+    if (!type) return 19;
+
+    var types = {
+        magazine: 19,
+        feed_self: 5,
+        feed_qa: 24,
+        furniture: 16,
+        interior: 18,
+        announce: 8
+    };
+
+    return types[type] || 19;
+};
+
+var test_withType = function () {
     var id = GetURLParameter('id'),
-        openAt = new Date,
-        uagentLow = navigator.userAgent.toLocaleLowerCase(),
-        isAndroid = uagentLow.search('android') > -1,
-        isiPhone = uagentLow.search('iphone') > -1,
-        iframe = angular.element('#applink'),
-        //iMarket = 'http://itunes.apple.com/kr/app/jibkkumigi/id992731402?mt=8',
-        iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-        AndMarket = 'market://details?id=com.osquare.mydearnest',
-        iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
-        iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
-        AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-        AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
-        chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+      type = GetURLParameter('test'),
+      openAt = new Date,
+      uagentLow = navigator.userAgent.toLocaleLowerCase(),
+      isAndroid = uagentLow.search('android') > -1,
+      isiPhone = uagentLow.search('iphone') > -1,
+      iframe = angular.element('#applink'),
+      iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+      AndMarket = 'market://details?id=com.osquare.mydearnest',
+      Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+      LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+      chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
     if (GetURLParameter('isMarket')) {
         if (isAndroid) {
-        	document.location.href = AndMarket;
+            document.location.href = AndMarket;
+        } else if (isiPhone) {
+            location.replace(iMarket);
+        }
+    }
+
+    if (GetURLParameter('test')) {
+        setTimeout(function () {
+            if (new Date - openAt < 4000) {
+                if (isAndroid) {
+                    iframe.attr('src', AndMarket);
+                } else if (isiPhone) {
+                    location.replace(Link);
+                }
+            }
+        }, 3000);
+
+        if (isAndroid) {
+            if (chrome25) {
+                document.location.href = Link;
+            } else {
+                iframe.attr('src', LinkAnd);
+            }
+        } else if (isiPhone) {
+            iframe.attr('src', Link);
+        }
+    }
+};
+
+var test_android = function () {
+    // 기본 변수 선언
+    var id = GetURLParameter('id'),
+      type = GetURLParameter('isShare'),
+      openAt = new Date,
+      uagentLow = navigator.userAgent.toLocaleLowerCase(),
+      isAndroid = uagentLow.search('android') > -1,
+      isiPhone = uagentLow.search('iphone') > -1,
+      iframe = angular.element('#applink'),
+      iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+      AndMarket = 'market://details?id=com.osquare.mydearnest',
+      iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+      iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+      AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+      AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+      chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+
+    if (GetURLParameter('isMarket')) {
+        if (isAndroid) {
+            document.location.href = AndMarket;
+        } else if (isiPhone) {
+            location.replace(iMarket);
+        }
+    }
+
+    if (GetURLParameter('isShare')) {
+        setTimeout(function () {
+            if (new Date - openAt < 4000) {
+                if (isAndroid) {
+                    //iframe.attr('src', AndMarket);
+                    alert('and market');
+                } else if (isiPhone) {
+                    alert('iphone market');
+                    //location.replace(iMarket);
+                }
+            }
+        }, 3000);
+
+        if (isAndroid) {
+            if (chrome25) {
+                alert('in chrome 25');
+                //document.location.href = id ? AndroidLinkParam : AndroidLink;
+            } else {
+                alert('in just chrome');
+                //iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
+            }
+        } else if (isiPhone) {
+            alert('in iphone');
+            //iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
+        }
+    }
+};
+
+var gotoApp = function () {
+    // 기본 변수 선언
+    var id = GetURLParameter('id'),
+      type = GetURLParameter('isShare'),
+      openAt = new Date,
+      uagentLow = navigator.userAgent.toLocaleLowerCase(),
+      isAndroid = uagentLow.search('android') > -1,
+      isiPhone = uagentLow.search('iphone') > -1,
+      iframe = angular.element('#applink'),
+      iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+      AndMarket = 'market://details?id=com.osquare.mydearnest',
+    //Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+    //AndriodParam = '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+      iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
+      iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
+      AndroidLink = 'mydearnest://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+      AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
+      chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+
+    if (GetURLParameter('isMarket')) {
+        if (isAndroid) {
+            document.location.href = AndMarket;
         } else if (isiPhone) {
             location.replace(iMarket);
         }
@@ -89,7 +210,6 @@ gotoApp = function () {
         }, 3000);
 
         if (isAndroid) {
-            kitkatWebview = uagentLow.indexOf('naver') !== -1 || uagentLow.indexOf('daum') !== -1;
             if (chrome25) {
                 document.location.href = id ? AndroidLinkParam : AndroidLink;
             } else {
@@ -109,10 +229,45 @@ $(document).ready(function() {
     });
 });
 
-var homedecoApp = angular.module('homedecoApp', ['ngSanitize', 'infinite-scroll']);
 var API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
 var IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
 var PageCount_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/api/count/';
+var homedecoApp = angular.module('homedecoApp', [
+    'ngSanitize',
+    'ui.router',
+    'infinite-scroll'
+]);
+
+homedecoApp
+  .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
+      function ($stateProvider, $urlRouterProvider, $locationProvider) {
+          $urlRouterProvider.otherwise('/');
+          $locationProvider.html5Mode(true);
+
+          $stateProvider
+            .state('main', {
+                url: '/',
+                templateUrl: '../public/components/main.html',
+                controller: 'MagazineListController'
+            })
+            .state('detail', {
+                url: '/view.php',
+                templateUrl: '../public/components/detail.html',
+                controller: 'MagazineController'
+            });
+      }])
+  .run(['$http', function ($http) {
+      var referrer = GetURLParameter('referrer');
+
+      // Guest Count
+      $http.put(PageCount_URL + 'guest?referrer=' + referrer || '');
+
+      // App Link
+      test_withType();
+      if (GetURLParameter('test')) {
+          test_android();
+      }
+  }]);
 
 homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
     $scope.magazines = [];
@@ -120,15 +275,12 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
 
-	gotoApp();
+    gotoApp();
     $scope.gotoApp = function () {
         location.href = '?isShare=true';
     };
 
-    // Guest Count
-	$http.put(PageCount_URL + 'guest');
-
-    addMagazines = function(data) {
+    var addMagazines = function(data) {
         for (var i = 0; i < data.data.length; i++) {
             var item = {
                 id: data.data[i]._id,
@@ -165,18 +317,18 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-	gotoApp();
+    gotoApp();
     $scope.gotoApp = function () {
         location.href = '?isShare=true&id=' + GetURLParameter('id');
     };
 
 
-	angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
+    angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
 
     // Page Count
-	$http.put(PageCount_URL + 'page');
+    $http.put(PageCount_URL + 'page');
 
-    pinClickSetting = function() {
+    var pinClickSetting = function() {
         $('.imagePinMobileLink').click(PinClick);
 
         $('.imagePinWrapper').hover(function() {
@@ -185,29 +337,29 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
         });
     };
 
-    init = function(data) {
-    	$scope.title = escapeHTML(data.data.contents.title.text);
+    var init = function(data) {
+        $scope.title = escapeHTML(data.data.contents.title.text);
         $scope.pages = angular.copy(data.data.contents.pages);
 
         for (var i = 0; i < data.data.contents.pages.length; i++) {
-        	$scope.pages[i].pins = [];
+            $scope.pages[i].pins = [];
             for (var j = 0; j < data.data.contents.pages[i].pins.length; j++) {
-            	if (!data.data.contents.pages[i].pins[j].correct
-            		&& angular.isArray(data.data.contents.pages[i].pins[j].similars)
-            		&& data.data.contents.pages[i].pins[j].similars.length > 0) {
-            		data.data.contents.pages[i].pins[j].correct = data.data.contents.pages[i].pins[j].similars[0];
-        		}
-            	if (data.data.contents.pages[i].pins[j].correct) {
-            		if (data.data.contents.pages[i].pins[j].correct.contents.image
-            			&& data.data.contents.pages[i].pins[j].correct.contents.image.indexOf('http') !== 0) {
-            				data.data.contents.pages[i].pins[j].correct.contents.image =
-            					IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image);
-        			}
-            		$scope.pages[i].pins.push({
-            			offset: data.data.contents.pages[i].pins[j].offset,
-            			contents: data.data.contents.pages[i].pins[j].correct.contents
-            		});
-            	}
+                if (!data.data.contents.pages[i].pins[j].correct
+                  && angular.isArray(data.data.contents.pages[i].pins[j].similars)
+                  && data.data.contents.pages[i].pins[j].similars.length > 0) {
+                    data.data.contents.pages[i].pins[j].correct = data.data.contents.pages[i].pins[j].similars[0];
+                }
+                if (data.data.contents.pages[i].pins[j].correct) {
+                    if (data.data.contents.pages[i].pins[j].correct.contents.image
+                      && data.data.contents.pages[i].pins[j].correct.contents.image.indexOf('http') !== 0) {
+                        data.data.contents.pages[i].pins[j].correct.contents.image =
+                          IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image);
+                    }
+                    $scope.pages[i].pins.push({
+                        offset: data.data.contents.pages[i].pins[j].offset,
+                        contents: data.data.contents.pages[i].pins[j].correct.contents
+                    });
+                }
             }
         }
 
@@ -215,9 +367,9 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     };
 
     $scope.bindText = function (text) {
-    	if (text) {
-    		return escapeHTML(text);
-    	};
+        if (text) {
+            return escapeHTML(text);
+        };
     };
 
     $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
