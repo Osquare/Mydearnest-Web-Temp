@@ -9,11 +9,7 @@ import webpack  from 'webpack-stream';
 import path     from 'path';
 import sync     from 'run-sequence';
 import serve    from 'browser-sync';
-import rename   from 'gulp-rename';
-import template from 'gulp-template';
 import fs       from 'fs';
-import yargs    from 'yargs';
-import lodash   from 'lodash';
 
 let reload = () => serve.reload();
 let root = 'client';
@@ -35,9 +31,38 @@ let paths = {
   css: resolveToApp('**/*.css'),
   html: [
     resolveToApp('**/*.html'),
-    path.join(root, index.html)
+    path.join(root, 'index.html')
   ],
   entry: path.join(root, 'app/app.js'),
   output: root
 };
+
+// building with webpack.config.js
+gulp.task('webpack', () => {
+  return gulp.src(paths.entry)
+    .pipe(webpack(require('./webpack.config')))
+    .pipe(gulp.dest(paths.output));
+});
+
+// webpack dev server (only 개발용)
+gulp.task('serve', () => {
+  serve({
+    port: process.env.PORT || 3000,
+    open: false,
+    server: {
+      baseDir: root
+    }
+  })
+});
+
+// watching file change
+gulp.task('watch', () => {
+  let allPaths = [].concat([paths.js], paths.html, [paths.css]);
+  gulp.watch(allPaths, ['webpack', reload]);
+});
+
+// gulp command
+gulp.task('default', (done) => {
+  sync('webpack', 'serve', 'watch', done);
+});
 
