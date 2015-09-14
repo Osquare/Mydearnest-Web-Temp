@@ -74,8 +74,6 @@ var shareType = function (type) {
 };
 
 var gotoApp17 = function () {
-    alert('test 1.7');
-
     var id = GetURLParameter('id'),
       type = GetURLParameter('isShare'),
       openAt = new Date,
