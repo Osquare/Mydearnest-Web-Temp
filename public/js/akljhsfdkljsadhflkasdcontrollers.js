@@ -73,9 +73,9 @@ var shareType = function (type) {
     return types[type] || 19;
 };
 
-var test_withType = function () {
+var gotoApp17 = function () {
     var id = GetURLParameter('id'),
-      type = GetURLParameter('test'),
+      type = GetURLParameter('isShare'),
       openAt = new Date,
       uagentLow = navigator.userAgent.toLocaleLowerCase(),
       isAndroid = uagentLow.search('android') > -1,
@@ -87,30 +87,20 @@ var test_withType = function () {
       LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
       chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
-    if (GetURLParameter('isMarket')) {
-        if (isAndroid) {
-            document.location.href = AndMarket;
-        } else if (isiPhone) {
-            location.replace(iMarket);
-        }
-    }
-
-    if (GetURLParameter('test')) {
-        setTimeout(function () {
-            if (new Date - openAt < 4000) {
-                if (isAndroid) {
-                    iframe.attr('src', AndMarket);
-                } else if (isiPhone) {
-                    location.replace(Link);
-                }
+    setTimeout(function () {
+        if (new Date - openAt < 4000) {
+            if (isAndroid) {
+                iframe.attr('src', AndMarket);
+            } else if (isiPhone) {
+                location.replace(iMarket);
             }
-        }, 3000);
-
-        if (isAndroid) {
-            iframe.attr('src', LinkAnd);
-        } else if (isiPhone) {
-            iframe.attr('src', Link);
         }
+    }, 3000);
+
+    if (isAndroid) {
+        iframe.attr('src', LinkAnd);
+    } else if (isiPhone) {
+        iframe.attr('src', Link);
     }
 };
 
@@ -132,6 +122,11 @@ var gotoApp = function () {
       AndroidLink = 'intent://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
       AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
       chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+
+    // App Link 1.7 URL 대응
+    if (type && type !== 'true') {
+        return gotoApp17();
+    }
 
     if (GetURLParameter('isMarket')) {
         if (isAndroid) {
@@ -200,12 +195,6 @@ homedecoApp
 
       // Guest Count
       $http.put(PageCount_URL + 'guest?referrer=' + (referrer || ''));
-
-      // App Link
-      // test_withType();
-      if (GetURLParameter('test')) {
-          test_withType();
-      }
   }]);
 
 homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
