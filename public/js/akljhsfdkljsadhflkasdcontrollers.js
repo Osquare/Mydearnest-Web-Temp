@@ -55,7 +55,7 @@ var PinClick = function() {
 };
 
 var escapeHTML = function(text) {
-    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
+    return text && text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
 };
 
 var shareType = function (type) {
@@ -163,9 +163,9 @@ $(document).ready(function() {
     });
 });
 
-var API_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines';
+var API_URL = 'http://api.ggumim.co.kr/1.7/magazines';
 var IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
-var PageCount_URL = 'http://mydearnestapi-env.elasticbeanstalk.com/api/count/';
+var PageCount_URL = 'http://api.ggumim.co.kr/api/count/';
 var homedecoApp = angular.module('homedecoApp', [
     'ngSanitize',
     'ui.router',
@@ -211,9 +211,9 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     var addMagazines = function(data) {
         for (var i = 0; i < data.data.length; i++) {
             var item = {
-                id: data.data[i]._id,
-                image_url: IMAGE_URL.replace(/{id}/gi, data.data[i].contents.title.image),
-                text: escapeHTML(data.data[i].contents.title.text)
+                id: data.data[i].mag_id,
+                image_url: IMAGE_URL.replace(/{id}/gi, data.data[i].title_img.img_id),
+                text: escapeHTML(data.data[i].title)
             };
             $scope.last_id = item.id;
             $scope.magazines.push(item);
@@ -241,7 +241,6 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
 
 homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$location', function ($scope, $http, $timeout, $location) {
     $scope.title = '';
-    $scope.content = '';
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
@@ -266,38 +265,54 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     };
 
     var init = function(data) {
-        $scope.title = escapeHTML(data.data.contents.title.text);
-        $scope.pages = angular.copy(data.data.contents.pages);
+        $scope.title = escapeHTML(data.data.title);
+        $scope.pages = angular.copy(data.data.pages);
 
-        for (var i = 0; i < data.data.contents.pages.length; i++) {
-            $scope.pages[i].pins = [];
-            for (var j = 0; j < data.data.contents.pages[i].pins.length; j++) {
-                if (!data.data.contents.pages[i].pins[j].correct
-                  && angular.isArray(data.data.contents.pages[i].pins[j].similars)
-                  && data.data.contents.pages[i].pins[j].similars.length > 0) {
-                    data.data.contents.pages[i].pins[j].correct = data.data.contents.pages[i].pins[j].similars[0];
-                }
-                if (data.data.contents.pages[i].pins[j].correct) {
-                    if (data.data.contents.pages[i].pins[j].correct.contents.image
-                      && data.data.contents.pages[i].pins[j].correct.contents.image.indexOf('http') !== 0) {
-                        data.data.contents.pages[i].pins[j].correct.contents.image =
-                          IMAGE_URL.replace(/{id}/gi, data.data.contents.pages[i].pins[j].correct.contents.image);
-                    }
-                    $scope.pages[i].pins.push({
-                        offset: data.data.contents.pages[i].pins[j].offset,
-                        contents: data.data.contents.pages[i].pins[j].correct.contents
-                    });
+        for (var i = 0; i < data.data.pages.length; i++) {
+            $scope.pages[i].tags = [];
+            for (var j = 0; j < data.data.pages[i].tags.length; j++) {
+                if (getCorrect(data.data.pages[i].tags[j].items)) {
+                    getCorrect(data.data.pages[i].tags[j].items).image =
+                      IMAGE_URL.replace(/{id}/gi, getCorrect(data.data.pages[i].tags[j].items).image.img_id);
+
+                    $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
+                      getCorrect(data.data.pages[i].tags[j].items)));
+                } else {
+                    getSimilars(data.data.pages[i].tags[j].items)[0].image =
+                      IMAGE_URL.replace(/{id}/gi, getSimilars(data.data.pages[i].tags[j].items)[0].image.img_id);
+
+                    $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
+                      getSimilars(data.data.pages[i].tags[j].items)[0]));
                 }
             }
         }
 
+
         $timeout(pinClickSetting, 0);
     };
+
+    function getSimilars (items) {
+        var result = [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type === 2) result.push(items[i]);
+        }
+
+        return result;
+    }
+
+    function getCorrect (items) {
+        var result;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type === 1) result = items[i];
+        }
+
+        return result;
+    }
 
     $scope.bindText = function (text) {
         if (text) {
             return escapeHTML(text);
-        };
+        }
     };
 
     $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
