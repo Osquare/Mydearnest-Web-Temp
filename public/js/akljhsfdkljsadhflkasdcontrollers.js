@@ -277,7 +277,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
 
                     $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
                       getCorrect(data.data.pages[i].tags[j].items)));
-                } else {
+                } else if (getSimilars(data.data.pages[i].tags[j].items).length > 0) {
                     getSimilars(data.data.pages[i].tags[j].items)[0].image =
                       IMAGE_URL.replace(/{id}/gi, getSimilars(data.data.pages[i].tags[j].items)[0].image.img_id);
 
