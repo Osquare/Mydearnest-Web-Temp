@@ -1,11 +1,11 @@
 <?php
 $id = $_GET["id"];
-$payload = file_get_contents('http://mydearnestapi-env.elasticbeanstalk.com/open_api/magazines/'.$id);
+$payload = file_get_contents('http://api.ggumim.co.kr/1.7/magazines/'.$id);
 $json = json_decode($payload);
 
 
-$titleText = $json->data->contents->title->text;
-$titleImageString = $json->data->contents->title->image->_id;
+$titleText = $json->data->title;
+$titleImageString = $json->data->title->image->img_id;
 $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
 ?>
 
