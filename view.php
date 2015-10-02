@@ -5,7 +5,7 @@ $json = json_decode($payload);
 
 
 $titleText = $json->data->title;
-$titleImageString = $json->data->title->image->img_id;
+$titleImageString = $json->data->title_img->img_id;
 $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
 ?>
 
