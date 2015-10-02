@@ -104,57 +104,6 @@ var gotoApp17 = function () {
     }
 };
 
-var gotoApp = function () {
-    // 기본 변수 선언
-    var id = GetURLParameter('id'),
-      type = GetURLParameter('isShare'),
-      openAt = new Date,
-      uagentLow = navigator.userAgent.toLocaleLowerCase(),
-      isAndroid = uagentLow.search('android') > -1,
-      isiPhone = uagentLow.search('iphone') > -1,
-      iframe = angular.element('#applink'),
-      iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-      AndMarket = 'market://details?id=com.osquare.mydearnest',
-    //Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
-    //AndriodParam = '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-      iPhoneLink = 'mydearnest://view?msgType=12&postType=0',
-      iPhoneLinkParam = 'mydearnest://view?msgType=12&id='+ id +'&postType=0',
-      AndroidLink = 'intent://move?position=0#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-      AndroidLinkParam = "intent://view?msgType=12&id="+id+"/#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end",
-      chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
-
-    // App Link 1.7 URL 대응
-    if (type && type !== 'true') {
-        return gotoApp17();
-    }
-
-    if (GetURLParameter('isMarket')) {
-        if (isAndroid) {
-            document.location.href = AndMarket;
-        } else if (isiPhone) {
-            location.replace(iMarket);
-        }
-    }
-
-    if (type) {
-        setTimeout(function () {
-            if (new Date - openAt < 4000) {
-                if (isAndroid) {
-                    iframe.attr('src', AndMarket);
-                } else if (isiPhone) {
-                    location.replace(iMarket);
-                }
-            }
-        }, 3000);
-
-        if (isAndroid) {
-            iframe.attr('src', id ? AndroidLinkParam : AndroidLink);
-        } else if (isiPhone) {
-            iframe.attr('src', id ? iPhoneLinkParam : iPhoneLink);
-        }
-    }
-};
-
 $(document).ready(function() {
     $(window).resize(ResizeWindow);
 
@@ -203,7 +152,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
 
-    gotoApp();
+    gotoApp17();
     $scope.gotoApp = function () {
         location.href = '?isShare=true';
     };
@@ -245,7 +194,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$l
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-    gotoApp();
+    gotoApp17();
     $scope.gotoApp = function () {
         location.href = '?isShare=true&id=' + GetURLParameter('id');
     };
