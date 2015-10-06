@@ -1,3 +1,56 @@
+<?php
+
+// magazine : 19 
+// feed_self : 5 
+// feed_qa : 24 
+// furniture : 16 
+// interior : 18
+// announce: 8
+function getContent($payloadURL, &$body, &$result) {
+    $body = file_get_contents($payloadURL);
+    $result = json_decode($body);
+}
+$id = $_GET["id"];
+$type = $_GET["isShare"];
+$titleText = "집꾸미기";
+$titleImageString = "";
+$titleImage = "";
+$payloadURL = "";
+$payload = null;
+$json = null;
+
+if($type) {
+    switch $type {
+        case 'magazine':
+            $payloadURL = 'http://api.ggumim.co.kr/1.7/magazines/'.$id;
+            getContent($payloadURL, $payload, $json);            
+            $titleText = $json->data->title;
+            $titleImageString = $json->data->title_img->img_id;
+        break;
+        case 'feed_self':
+
+        break;
+        case 'feed_qa':
+
+        break;
+        case 'furniture':
+
+        break;
+        case 'interior':
+
+        break;
+        case 'announce':
+
+        break;
+        default:
+
+    }
+} else {
+    return;
+}
+
+$titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
