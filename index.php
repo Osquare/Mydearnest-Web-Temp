@@ -12,15 +12,15 @@ function getContent($payloadURL, &$body, &$result) {
 }
 $id = $_GET["id"];
 $type = $_GET["isShare"];
-$titleText = "집꾸미기";
+$titleText = "당신을 위한 인테리어 전문 앱 \n 집꾸미기를 소개합니다~";
 $titleImageString = "";
-$titleImage = "";
+$titleImage = "public/img/og_main.png";
 $payloadURL = "";
 $payload = null;
 $json = null;
 
 if($type) {
-    switch $type {
+    switch ($type) {
         case 'magazine':
             $payloadURL = 'http://api.ggumim.co.kr/1.7/magazines/'.$id;
             getContent($payloadURL, $payload, $json);            
@@ -28,28 +28,36 @@ if($type) {
             $titleImageString = $json->data->title_img->img_id;
         break;
         case 'feed_self':
-
+			$payloadURL = 'http://api.ggumim.co.kr/1.7/feeds/'.$id.'?type=5';
+            getContent($payloadURL, $payload, $json);            
+            $titleText = $json->data->text;
+            $titleImageString = $json->data->images[0]->img_id;
         break;
         case 'feed_qa':
-
+			$payloadURL = 'http://api.ggumim.co.kr/1.7/feeds/'.$id.'?type=24';
+            getContent($payloadURL, $payload, $json);            
+            $titleText = $json->data->text;
+            $titleImageString = $json->data->images[0]->img_id;
         break;
         case 'furniture':
-
+			$payloadURL = 'http://api.ggumim.co.kr/1.7/furnitures/'.$id;
+            getContent($payloadURL, $payload, $json);            
+            $titleText = $json->data->model;
+            $titleImageString = $json->data->image->img_id;
         break;
         case 'interior':
-
-        break;
-        case 'announce':
-
+			$payloadURL = 'http://api.ggumim.co.kr/1.7/interiors/'.$id;
+            getContent($payloadURL, $payload, $json);            
+            $titleText = '집꾸미기 인테리어 사진 ';
+            $titleImageString = $json->data->image->img_id;
         break;
         default:
 
     }
-} else {
-    return;
-}
+} 
 
-$titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
+$titleImage = empty($titleImageString) ? "public/img/og_main.png" :
+	'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,8 +79,8 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
 
     <meta property="og:title" content=" 집꾸미기 " />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="당신을 위한 인테리어 전문 앱 \n 집꾸미기를 소개합니다~" />
-    <meta property="og:image" content="public/img/og_main.png" />
+    <meta property="og:description" content="<?=$titleText?>" />
+    <meta property="og:image" content="<?=$titleImage?>" />
 
     <link rel="stylesheet" href="public/css/reset.css">
     <link rel="stylesheet" href="public/css/common.css">
