@@ -45,6 +45,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <script src="https://code.angularjs.org/1.2.14/angular-sanitize.min.js"></script>
         <script src="public/js/byposting_cpc_sdk.js"></script>
         <script src="public/js/ng-infinite-scroll.min.js"></script>
+        <script src="public/js/imagesloaded.pkgd.min.js"></script>
         <!-- <script src="./js/main.js"></script> -->
     </head>
     <body ng-app="homedecoApp">
