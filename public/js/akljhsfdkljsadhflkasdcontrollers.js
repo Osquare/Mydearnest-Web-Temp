@@ -161,7 +161,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $scope.last_id = null;
     $scope.intentID = GetURLParameter('id');
 
-    gotoApp17();
+    if (GetURLParameter('isShare')) gotoApp17();
     $scope.gotoApp = function () {
         location.href = '?isShare=true';
     };
@@ -204,7 +204,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
         $scope.intentID = GetURLParameter('id');
         $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-        gotoApp17();
+        if (GetURLParameter('isShare')) gotoApp17();
         $scope.gotoApp = function () {
             location.href = '?isShare=true&id=' + GetURLParameter('id');
         };
