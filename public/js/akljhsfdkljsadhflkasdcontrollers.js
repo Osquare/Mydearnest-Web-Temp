@@ -106,7 +106,6 @@ var gotoApp17 = function () {
 
 $(document).ready(function() {
     $(window).resize(ResizeWindow);
-
     $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
         $('#ProductPopupOverlayWrapper').removeClass('active');
     });
@@ -144,6 +143,16 @@ homedecoApp
 
       // Guest Count
       $http.put(PageCount_URL + 'guest?referrer=' + (referrer || ''));
+  }]);
+
+homedecoApp
+  .factory('DOMReady', [function () {
+      return function () {
+          $(window).resize(ResizeWindow);
+          $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
+              $('#ProductPopupOverlayWrapper').removeClass('active');
+          });
+      };
   }]);
 
 homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
@@ -188,81 +197,83 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
     $http.get(API_URL).success(addMagazines);
 }]);
 
-homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', '$location', function ($scope, $http, $timeout, $location) {
-    $scope.title = '';
-    $scope.pages = [];
-    $scope.intentID = GetURLParameter('id');
-    $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
+homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DOMReady',
+    function ($scope, $http, $timeout, DOMReady) {
+        $scope.title = '';
+        $scope.pages = [];
+        $scope.intentID = GetURLParameter('id');
+        $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
 
-    gotoApp17();
-    $scope.gotoApp = function () {
-        location.href = '?isShare=true&id=' + GetURLParameter('id');
-    };
+        gotoApp17();
+        $scope.gotoApp = function () {
+            location.href = '?isShare=true&id=' + GetURLParameter('id');
+        };
 
-    angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
+        angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
 
-    // Page Count
-    $http.put(PageCount_URL + 'page');
+        // Page Count
+        $http.put(PageCount_URL + 'page');
 
-    var pinClickSetting = function() {
-        $('.imagePinMobileLink').click(PinClick);
+        var pinClickSetting = function() {
+            $('.imagePinMobileLink').click(PinClick);
 
-        $('.imagePinWrapper').hover(function() {
-            var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
-            $(this).find('.pinProductWrapper').width(width);
-        });
-    };
+            $('.imagePinWrapper').hover(function() {
+                var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
+                $(this).find('.pinProductWrapper').width(width);
+            });
+        };
 
-    var init = function(data) {
-        $scope.title = escapeHTML(data.data.title);
-        $scope.pages = angular.copy(data.data.pages);
+        var init = function(data) {
+            $scope.title = escapeHTML(data.data.title);
+            $scope.pages = angular.copy(data.data.pages);
 
-        for (var i = 0; i < data.data.pages.length; i++) {
-            $scope.pages[i].tags = [];
-            for (var j = 0; j < data.data.pages[i].tags.length; j++) {
-                if (getCorrect(data.data.pages[i].tags[j].items)) {
-                    getCorrect(data.data.pages[i].tags[j].items).image =
-                      IMAGE_URL.replace(/{id}/gi, getCorrect(data.data.pages[i].tags[j].items).image.img_id);
+            for (var i = 0; i < data.data.pages.length; i++) {
+                $scope.pages[i].tags = [];
+                for (var j = 0; j < data.data.pages[i].tags.length; j++) {
+                    if (getCorrect(data.data.pages[i].tags[j].items)) {
+                        getCorrect(data.data.pages[i].tags[j].items).image =
+                          IMAGE_URL.replace(/{id}/gi, getCorrect(data.data.pages[i].tags[j].items).image.img_id);
 
-                    $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
-                      getCorrect(data.data.pages[i].tags[j].items)));
-                } else if (getSimilars(data.data.pages[i].tags[j].items).length > 0) {
-                    getSimilars(data.data.pages[i].tags[j].items)[0].image =
-                      IMAGE_URL.replace(/{id}/gi, getSimilars(data.data.pages[i].tags[j].items)[0].image.img_id);
+                        $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
+                          getCorrect(data.data.pages[i].tags[j].items)));
+                    } else if (getSimilars(data.data.pages[i].tags[j].items).length > 0) {
+                        getSimilars(data.data.pages[i].tags[j].items)[0].image =
+                          IMAGE_URL.replace(/{id}/gi, getSimilars(data.data.pages[i].tags[j].items)[0].image.img_id);
 
-                    $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
-                      getSimilars(data.data.pages[i].tags[j].items)[0]));
+                        $scope.pages[i].tags.push(angular.extend(data.data.pages[i].tags[j],
+                          getSimilars(data.data.pages[i].tags[j].items)[0]));
+                    }
                 }
             }
+
+
+            $timeout(pinClickSetting, 0);
+        };
+
+        function getSimilars (items) {
+            var result = [];
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type === 2) result.push(items[i]);
+            }
+
+            return result;
         }
 
+        function getCorrect (items) {
+            var result;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type === 1) result = items[i];
+            }
 
-        $timeout(pinClickSetting, 0);
-    };
-
-    function getSimilars (items) {
-        var result = [];
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type === 2) result.push(items[i]);
+            return result;
         }
 
-        return result;
-    }
+        $scope.bindText = function (text) {
+            if (text) {
+                return escapeHTML(text);
+            }
+        };
 
-    function getCorrect (items) {
-        var result;
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type === 1) result = items[i];
-        }
-
-        return result;
-    }
-
-    $scope.bindText = function (text) {
-        if (text) {
-            return escapeHTML(text);
-        }
-    };
-
-    $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
+        $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
+        DOMReady();
 }]);
