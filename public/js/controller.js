@@ -73,18 +73,17 @@ var shareType = function (type) {
   return types[type] || 19;
 };
 
-var id = GetURLParameter('id'),
-  type = GetURLParameter('isShare'),
-  uagentLow = navigator.userAgent.toLocaleLowerCase(),
-  isiPhone = uagentLow.search('iphone') > -1,
-  isAndroid = uagentLow.search('android') > -1,
-  iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-  AndMarket = 'market://details?id=com.osquare.mydearnest',
-  Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
-  LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
-
 var gotoApp17 = function () {
-  var openAt = new Date,
+  var id = GetURLParameter('id'),
+    type = GetURLParameter('isShare'),
+    uagentLow = navigator.userAgent.toLocaleLowerCase(),
+    isiPhone = uagentLow.search('iphone') > -1,
+    isAndroid = uagentLow.search('android') > -1,
+    iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+    AndMarket = 'market://details?id=com.osquare.mydearnest',
+    Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+    openAt = new Date,
     iframe = angular.element('#applink'),
     chrome25 = uagentLow.search('chrome') > -1 &&
       navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
@@ -107,12 +106,21 @@ var gotoApp17 = function () {
 };
 
 function BannerApplink () {
-  var openAt = new Date,
+  var id = GetURLParameter('id'),
+    type = GetURLParameter('isShare'),
+    uagentLow = navigator.userAgent.toLocaleLowerCase(),
+    isiPhone = uagentLow.search('iphone') > -1,
+    isAndroid = uagentLow.search('android') > -1,
+    iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+    AndMarket = 'market://details?id=com.osquare.mydearnest',
+    Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+    openAt = new Date,
     banner = angular.element('a#HeaderAppLink');
 
+  console.log('banner => ', banner);
   banner.prop('href', Link);
   banner.click(function () {
-    console.log('banner clicked');
     setTimeout(function () {
       if (new Date - openAt < 4000) {
         if (isAndroid) {
