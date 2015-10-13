@@ -80,7 +80,7 @@ var id = GetURLParameter('id'),
   isAndroid = uagentLow.search('android') > -1,
   iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
   AndMarket = 'market://details?id=com.osquare.mydearnest',
-  Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+  Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + (id || ''),
   LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
 
 var gotoApp17 = function () {
@@ -102,6 +102,7 @@ var gotoApp17 = function () {
   if (isAndroid) {
     iframe.attr('src', LinkAnd);
   } else if (isiPhone) {
+    console.log(Link);
     iframe.attr('src', Link);
   }
 };
