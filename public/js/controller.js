@@ -112,7 +112,6 @@ function BannerApplink () {
 
   banner.prop('href', Link);
   banner.click(function () {
-    console.log('banner clicked');
     setTimeout(function () {
       if (new Date - openAt < 4000) {
         if (isAndroid) {
@@ -263,6 +262,8 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
               getSimilars(data.data.pages[i].tags[j].items)[0]));
           }
         }
+        
+        DOMReady();
       }
 
 
@@ -294,5 +295,4 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
     };
 
     $http.get(API_URL + '/' + GetURLParameter('id')).success(init);
-    DOMReady();
   }]);
