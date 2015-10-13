@@ -73,19 +73,21 @@ var shareType = function (type) {
     return types[type] || 19;
 };
 
+var id = GetURLParameter('id'),
+    type = GetURLParameter('isShare'),
+    uagentLow = navigator.userAgent.toLocaleLowerCase(),
+    isiPhone = uagentLow.search('iphone') > -1,
+    isAndroid = uagentLow.search('android') > -1,
+    iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+    AndMarket = 'market://details?id=com.osquare.mydearnest',
+    Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
+
 var gotoApp17 = function () {
-    var id = GetURLParameter('id'),
-      type = GetURLParameter('isShare'),
-      openAt = new Date,
-      uagentLow = navigator.userAgent.toLocaleLowerCase(),
-      isAndroid = uagentLow.search('android') > -1,
-      isiPhone = uagentLow.search('iphone') > -1,
+  var openAt = new Date,
       iframe = angular.element('#applink'),
-      iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-      AndMarket = 'market://details?id=com.osquare.mydearnest',
-      Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + id,
-      LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-      chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+      chrome25 = uagentLow.search('chrome') > -1 &&
+        navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
     setTimeout(function () {
         if (new Date - openAt < 4000) {
@@ -103,6 +105,24 @@ var gotoApp17 = function () {
         iframe.attr('src', Link);
     }
 };
+
+function BannerApplink () {
+    var openAt = new Date,
+        banner = angular.element('a#HeaderAppLink');
+
+    banner.prop('href', Link);
+    banner.click(function (e) {
+        setTimeout(function () {
+            if (new Date - openAt < 4000) {
+                if (isAndroid) {
+                    iframe.attr('src', AndMarket);
+                } else if (isiPhone) {
+                    location.replace(iMarket);
+                }
+            }
+        }, 3000);
+    });
+}
 
 $(document).ready(function() {
     $(window).resize(ResizeWindow);
@@ -148,10 +168,12 @@ homedecoApp
 homedecoApp
   .factory('DOMReady', [function () {
       return function () {
+          ResizeWindow();
           $(window).resize(ResizeWindow);
           $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
               $('#ProductPopupOverlayWrapper').removeClass('active');
           });
+          BannerApplink();
       };
   }]);
 
@@ -215,7 +237,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
         $http.put(PageCount_URL + 'page');
 
         var pinClickSetting = function() {
-            $('.imagePinMobileLink').click(PinClick);
+            $('.imagePinMobileLink').click(PinClick)
 
             $('.imagePinWrapper').hover(function() {
                 var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;

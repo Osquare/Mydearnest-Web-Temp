@@ -93,6 +93,7 @@ $titleImage = empty($titleImageString) ? "public/img/og_main.png" :
     <script src="https://code.angularjs.org/1.2.14/angular-sanitize.min.js"></script>
     <script src="public/js/byposting_cpc_sdk.js"></script>
     <script src="public/js/ng-infinite-scroll.min.js"></script>
+    <script src="public/js/imagesloaded.pkgd.min.js"></script>
 </head>
 <body ng-app="homedecoApp">
     <div id="Header">
