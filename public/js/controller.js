@@ -111,7 +111,8 @@ function BannerApplink () {
     banner = angular.element('a#HeaderAppLink');
 
   banner.prop('href', Link);
-  banner.click(function (e) {
+  banner.click(function () {
+    console.log('banner clicked');
     setTimeout(function () {
       if (new Date - openAt < 4000) {
         if (isAndroid) {
@@ -184,9 +185,6 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
   $scope.intentID = GetURLParameter('id');
 
   if (GetURLParameter('isShare')) gotoApp17();
-  $scope.gotoApp = function () {
-    location.href = '?isShare=true';
-  };
 
   var addMagazines = function(data) {
     for (var i = 0; i < data.data.length; i++) {
@@ -225,13 +223,11 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
+    $scope.AppLink = Link;
 
     if (GetURLParameter('isShare')) gotoApp17();
-    $scope.gotoApp = function () {
-      location.href = '?isShare=true&id=' + GetURLParameter('id');
-    };
 
-    angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
+    //angular.element('#HeaderAppLink').width($(window).width()).height($(window).width() / 2);
 
     // Page Count
     $http.put(PageCount_URL + 'page');
