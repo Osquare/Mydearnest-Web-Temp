@@ -73,18 +73,23 @@ var shareType = function (type) {
   return types[type] || 19;
 };
 
-var id = GetURLParameter('id'),
-  type = GetURLParameter('isShare'),
-  uagentLow = navigator.userAgent.toLocaleLowerCase(),
-  isiPhone = uagentLow.search('iphone') > -1,
-  isAndroid = uagentLow.search('android') > -1,
-  iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-  AndMarket = 'market://details?id=com.osquare.mydearnest',
-  Link = 'mydearnest://view?msgType=' + shareType(type) + '&id=' + (id || ''),
-  LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
+var getLink = function () {
+    
+  var id = GetURLParameter('id'),
+    type = GetURLParameter('isShare'),
+    
+  return 'mydearnest://view?msgType='+ shareType(type) + '&id=' + id;
+};
 
 var gotoApp17 = function () {
-  var openAt = new Date,
+    var uagentLow = navigator.userAgent.toLocaleLowerCase(),
+    isiPhone = uagentLow.search('iphone') > -1,
+    isAndroid = uagentLow.search('android') > -1,
+    iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+    AndMarket = 'market://details?id=com.osquare.mydearnest',
+    Link = getLink(),
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+    openAt = new Date,
     iframe = angular.element('#applink'),
     chrome25 = uagentLow.search('chrome') > -1 &&
       navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
@@ -108,7 +113,14 @@ var gotoApp17 = function () {
 };
 
 function BannerApplink () {
-  var openAt = new Date,
+    var uagentLow = navigator.userAgent.toLocaleLowerCase(),
+    isiPhone = uagentLow.search('iphone') > -1,
+    isAndroid = uagentLow.search('android') > -1,
+    iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+    AndMarket = 'market://details?id=com.osquare.mydearnest',
+    Link = getLin(),
+    LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
+    openAt = new Date,
     banner = angular.element('a#HeaderAppLink');
 
   banner.prop('href', Link);
@@ -183,7 +195,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
   $scope.scroll_busy = true;
   $scope.last_id = null;
   $scope.intentID = GetURLParameter('id');
-  $scope.AppLink = Link;
+  $scope.AppLink = getLink();
 
   if (GetURLParameter('isShare')) gotoApp17();
 
@@ -224,7 +236,7 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
-    $scope.AppLink = Link;
+    $scope.AppLink = getLink();
 
     if (GetURLParameter('isShare')) gotoApp17();
 
