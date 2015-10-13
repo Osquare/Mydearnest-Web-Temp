@@ -76,7 +76,7 @@ var shareType = function (type) {
 var getLink = function () {
     
   var id = GetURLParameter('id'),
-    type = GetURLParameter('isShare'),
+    type = GetURLParameter('isShare');
     
   return 'mydearnest://view?msgType='+ shareType(type) + '&id=' + id;
 };
