@@ -169,12 +169,12 @@ homedecoApp
 homedecoApp
   .factory('DOMReady', [function () {
     return function () {
-      ResizeWindow();
       $(window).resize(ResizeWindow);
       $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
         $('#ProductPopupOverlayWrapper').removeClass('active');
       });
       BannerApplink();
+      ResizeWindow();
     };
   }]);
 
@@ -183,6 +183,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
   $scope.scroll_busy = true;
   $scope.last_id = null;
   $scope.intentID = GetURLParameter('id');
+  $scope.AppLink = Link;
 
   if (GetURLParameter('isShare')) gotoApp17();
 
