@@ -4,6 +4,7 @@
 
 var angular = require('angular');
 var uib = require('angular-ui-router');
+var is = require('ng-infinite-scroll');
 
 var ngModule = angular.module('homedecoApp', [
     uib

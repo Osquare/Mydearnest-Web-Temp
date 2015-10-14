@@ -2,8 +2,8 @@
 
 .homedeco_main {
   #Content.magazineWrapper {
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: -10px;
+    margin-right: -10px;
   }
 
   .magazineWrapper {
@@ -52,15 +52,6 @@
       color: #fff;
       text-align: center;
     }
-
-    .magazineItem:first-child {
-      .magazineItemText {
-        top: 0;
-        font-size: 27px;
-      }
-    }
-
-
   }
 
   @media #{$desktop} {
@@ -68,9 +59,10 @@
       .magazineItem {
         width: 340px !important;
         height: 340px !important;
+        margin: 10px;
       }
 
-      .magazineItem:nth-child(2) {
+      .magazineItem:nth-child(1) {
         width: 700px !important;
       }
     }
@@ -99,10 +91,6 @@
         top: 40%;
         padding: 0 10px;
         font-size: 13px;
-      }
-
-      .magazineItem:first-child .magazineItemText{
-        font-size: 16px;
       }
     }
   }

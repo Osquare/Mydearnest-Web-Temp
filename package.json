@@ -4,7 +4,7 @@
   "description": "집꾸미기 공식 웹페이지.",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production node node_modules/.bin/webpack",
+    "build": "NODE_ENV=production node node_modules/.bin/webpack --inline",
     "start": "node node_modules/.bin/webpack-dev-server",
     "dist": "http-server dist"
   },

@@ -5,44 +5,81 @@
 module.exports = function (ngModule) {
     ngModule.controller('MagazineListController',
         function ($scope, $timeout, $sce, $http, MAGAZINES, CONFIG, Methods) {
-        require('./main.scss');
+            require('./main.scss');
 
-        var magazines = MAGAZINES.data.data;
-        $scope.scroll_busy = true;
-        $scope.last_id = null;
-        $scope.magazines = [];
+            $scope.scroll_busy = true;
+            $scope.last_id = null;
+            $scope.magazines = [];
 
-        /**
-         *
-         *  Window 가 Resizing 될때에 이벤트 발생
-         */
-        $scope.$on('$WindowResize', adjust);
-        Methods.map(magazines, (formatting));
+            /**
+             *  초기 ui router resolve option 으로 가져온 magazines
+             */
+            mapping(MAGAZINES.data);
 
-        function formatting (data, idx, array) {
-            data.id = data.mag_id;
-            data.img_url = CONFIG.IMAGE_URL.replace(/{id}/gi, data.title_img.img_id);
-            data.text = $sce.trustAsHtml(Methods.escapeHTML(data.title));
+            /**
+             *  Window 가 Resizing 될때에 이벤트 발생
+             */
+            $scope.$on('$WindowResize', adjust);
 
-            if (array.length - 1 === idx) $scope.scroll_busy = false;
+            $scope.loadMore = function () {
+                if ($scope.scroll_busy) return;
+                $scope.scroll_busy = true;
+                var url = CONFIG.API_URL + '?limit=10';
+                if ($scope.last_id) url += '&current=' + $scope.last_id;
 
-            push(data);
-        }
+                $http.get(url).success(mapping);
+            };
 
-        function push (data) {
-            $scope.last_id = data.id;
-            $scope.magazines.push(data);
-            $timeout(adjust);
-        }
-
-        function adjust () {
-            var width = Math.floor($(window).width() / 2)-1;
-            if ($(window).width() < 1024) {
-                $('.magazineItem').width(width);
-            } else {
-                $('.magazineItem').width(width);
+            /**
+             *  매거진을의 데이터를 가공하기 위해 iterator 를 돌린다.
+             */
+            function mapping (data) {
+                Methods.map(data.data, formatting);
             }
-            $('.magazineItem').height(width);
-        }
+
+            /**
+             *
+             * @param data
+             * @param idx
+             * @param array
+             * @desc
+             * 앞에서 보여줄 데이터를 가공한 후, $scope.magazines 로 밀어준다.
+             */
+            function formatting (data, idx, array) {
+                data.id = data.mag_id;
+                data.img_url = CONFIG.IMAGE_URL.replace(/{id}/gi, data.title_img.img_id);
+                data.text = $sce.trustAsHtml(Methods.escapeHTML(data.title));
+
+                if (array.length - 1 === idx) $scope.scroll_busy = false;
+
+                push(data);
+            }
+
+            /**
+             *
+             * @param data
+             * @desc
+             * data 를 받아서 $scope.magazines 로 push 하며, angular digest 를 돌리면서
+             * css 를 잡아준다.
+             */
+            function push (data) {
+                $scope.last_id = data.id;
+                $scope.magazines.push(data);
+                $timeout(adjust);
+            }
+
+            /**
+             * @desc
+             * Window Size 를 계산하면서 magazine 의 css 를 조정.
+             */
+            function adjust () {
+                var width = Math.floor($(window).width() / 2)-1;
+                if ($(window).width() < 1024) {
+                    $('.magazineItem').width(width);
+                } else {
+                    $('.magazineItem').width(width);
+                }
+                $('.magazineItem').height(width);
+            }
     });
 };
