@@ -1,0 +1,22 @@
+$desktop: "(min-width: 1024px)";
+$mobile: "(max-width: 1023px)";
+
+
+.banner-wrap {
+
+  @media #{$desktop} {
+    #HeaderAppLink {
+      display: none;
+    }
+  }
+
+  @media #{$mobile} {
+    #HeaderAppLink {
+      display: block;
+      background: url('/app/images/appLinkImage.png');
+      background-repeat: no-repeat;
+      -webkit-background-size: cover;
+      background-size: cover;
+    }
+  }
+}

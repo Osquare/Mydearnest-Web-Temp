@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 var config = {
 	entry: './app/app.js',
@@ -10,14 +11,15 @@ var config = {
 	},
 
 	plugins: [
-		new ngAnnotatePlugin({add: true})
+		new ngAnnotatePlugin({add: true}),
+		new LiveReloadPlugin({appendScriptTag: true})
 	],
 
 	module: {
 		loaders: [
 			{test: /\.js$/, loader: 'ng-annotate!babel', exclude: /node_modules/},
 			{test: /\.html$/, loader: 'raw', exclude: /node_modules/},
-			{test: /\.css$/, loader: 'style!css', exclude: /node_modules/}
+			{test: /\.scss$/, loaders: ["style", "css", "sass"]}
 		]
 	},
 
@@ -25,7 +27,6 @@ var config = {
 		port: 3002
 	}
 };
-
 
 if (process.env.NODE_ENV === 'production') {
 	config.output.path = __dirname + '/dist';

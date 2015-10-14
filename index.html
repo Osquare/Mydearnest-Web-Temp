@@ -26,23 +26,22 @@
     <link rel="stylesheet" href="public/css/main.css">
     <link rel="stylesheet" href="public/css/view.css">
 
-    <!--<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>-->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>-->
-    <!--<script src="public/js/ng-ui-router.js"></script>-->
-    <!--<script src="https://code.angularjs.org/1.2.14/angular-sanitize.min.js"></script>-->
-    <!--<script src="public/js/byposting_cpc_sdk.js"></script>-->
-    <!--<script src="public/js/ng-infinite-scroll.min.js"></script>-->
-    <!--<script src="public/js/imagesloaded.pkgd.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="public/js/imagesloaded.pkgd.min.js"></script>
+    <script src="public/js/byposting_cpc_sdk.js"></script>
 </head>
-<body ng-app="homedecoApp">
+<body data-ng-app="homedecoApp">
 <div id="Header">
     <a id="HeaderLogoButton" href="/">
         <img id="HeaderLogo" height="30" src="./app/images/logo.png" alt="집꾸미기">
     </a>
 </div>
 
+<banner></banner>
+
 <!-- Views -->
-<div ui-view=""></div>
+<div data-ui-view=""></div>
+<applink></applink>
 
 <script src="./bundle.js"></script>
 <script>

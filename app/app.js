@@ -27,10 +27,18 @@ var ngModule = angular.module('homedecoApp', [
                 });
 
         }])
-    .run(($http, CONFIG, Methods) => {
+    .run(($rootScope, $window, $http, CONFIG, Methods) => {
         // Guest Count
         var referrer = Methods.GetURLParameter('referrer');
         $http.put(CONFIG.PageCount_URL + 'guest?referrer=' +  (referrer || ''));
+
+        /**
+         *  $rootScope Window Size Change Event
+         */
+
+        angular.element($window).bind('resize', function () {
+            $rootScope.$broadcast('$WindowResize')
+        });
     });
 
 require('./components')(ngModule);
