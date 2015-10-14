@@ -17,6 +17,11 @@ var ngModule = angular.module('homedecoApp', [
             $stateProvider
                 .state('main', {
                     url: '/',
+                    resolve: {
+                        MAGAZINES: ['CONFIG', '$http', function (CONFIG, $http) {
+                            return $http.get(CONFIG.API_URL);
+                        }]
+                    },
                     template: require('./components/main/main.html'),
                     controller: 'MagazineListController'
                 })
