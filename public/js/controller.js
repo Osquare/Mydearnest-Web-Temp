@@ -124,25 +124,18 @@ function BannerApplink () {
     banner = angular.element('a#HeaderAppLink');
 
   banner.prop('href', Link);
-  banner.click(function () {
-    setTimeout(function () {
-      if (new Date - openAt < 4000) {
-        if (isAndroid) {
-          iframe.attr('src', AndMarket);
-        } else if (isiPhone) {
-          location.replace(iMarket);
-        }
-      }
-    }, 3000);
-  });
+  //banner.click(function () {
+  //  setTimeout(function () {
+  //    if (new Date - openAt < 4000) {
+  //      if (isAndroid) {
+  //        iframe.attr('src', AndMarket);
+  //      } else if (isiPhone) {
+  //        location.replace(iMarket);
+  //      }
+  //    }
+  //  }, 3000);
+  //});
 }
-
-$(document).ready(function() {
-  $(window).resize(ResizeWindow);
-  $('#ProductPopupExit,#ProductPopupOverlay').click(function() {
-    $('#ProductPopupOverlayWrapper').removeClass('active');
-  });
-});
 
 var API_URL = 'http://api.ggumim.co.kr/1.7/magazines';
 var IMAGE_URL = 'http://image.ggumim.co.kr/unsafe/{id}/{id}';
