@@ -19,6 +19,11 @@ var config = {
 			{test: /\.html$/, loader: 'raw', exclude: /node_modules/},
 			{test: /\.css$/, loader: 'style!css', exclude: /node_modules/}
 		]
+	},
+
+	devServer: {
+		port: 3002,
+		historyApiFallback: true
 	}
 };
 
