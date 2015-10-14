@@ -122,9 +122,9 @@ function BannerApplink () {
     LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
     openAt = new Date,
     banner = angular.element('a#HeaderAppLink');
-
-  if (isAndroid) banner.prop('href', AndMarket);
-  if (isiPhone) banner.prop('href', iMarket);
+    
+    if (isiPhone) banner.prop('href', iMarket);
+    if (isAndroid) banner.prop('href', AndMarket);
 
   //banner.click(function () {
   //  setTimeout(function () {
@@ -185,12 +185,11 @@ homedecoApp
     };
   }]);
 
-homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout', 'DOMReady', function ($scope, $http, $timeout, DOMReady) {
   $scope.magazines = [];
   $scope.scroll_busy = true;
   $scope.last_id = null;
   $scope.intentID = GetURLParameter('id');
-  $scope.AppLink = getLink();
 
   if (GetURLParameter('isShare')) gotoApp17();
 
@@ -208,6 +207,7 @@ homedecoApp.controller('MagazineListController', ['$scope', '$http', '$timeout',
       $scope.scroll_busy = false;
     }
     $timeout(ResizeWindow, 0);
+    DOMReady();
   };
 
   $scope.loadMore = function() {
@@ -231,7 +231,6 @@ homedecoApp.controller('MagazineController', ['$scope', '$http', '$timeout', 'DO
     $scope.pages = [];
     $scope.intentID = GetURLParameter('id');
     $scope.noBanner = GetURLParameter('noBanner') === 'true' ? true : false;
-    $scope.AppLink = getLink();
 
     if (GetURLParameter('isShare')) gotoApp17();
 
