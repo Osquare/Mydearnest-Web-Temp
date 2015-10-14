@@ -78,7 +78,7 @@ var getLink = function () {
   var id = GetURLParameter('id'),
     type = GetURLParameter('isShare');
     
-  return 'mydearnest://view?msgType='+ shareType(type) + '&id=' + id;
+  return 'mydearnest://view?msgType='+ shareType(type) + '&id=' + (id || '');
 };
 
 var gotoApp17 = function () {
@@ -107,7 +107,7 @@ var gotoApp17 = function () {
   if (isAndroid) {
     iframe.attr('src', LinkAnd);
   } else if (isiPhone) {
-    console.log(Link);
+    console.log(iframe, Link);
     iframe.attr('src', Link);
   }
 };
@@ -118,12 +118,11 @@ function BannerApplink () {
     isAndroid = uagentLow.search('android') > -1,
     iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
     AndMarket = 'market://details?id=com.osquare.mydearnest',
-    Link = getLin(),
+    Link = getLink(),
     LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
     openAt = new Date,
     banner = angular.element('a#HeaderAppLink');
 
-  banner.prop('href', Link);
   banner.click(function () {
     setTimeout(function () {
       if (new Date - openAt < 4000) {
