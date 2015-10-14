@@ -4,8 +4,8 @@
   "description": "집꾸미기 공식 웹페이지.",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production node node_modules/.bin/webpack && cp app/index.html dist/index.html",
-    "start": "node node_modules/.bin/webpack-dev-server --content-base app",
+    "build": "NODE_ENV=production node node_modules/.bin/webpack",
+    "start": "node node_modules/.bin/webpack-dev-server",
     "dist": "http-server dist"
   },
   "repository": {
@@ -38,7 +38,9 @@
     "node-libs-browser": "^0.5.0",
     "raw-loader": "^0.5.1",
     "run-sequence": "^1.1.0",
+    "style-loader": "^0.12.4",
     "webpack": "^1.10.5",
+    "webpack-core": "^0.6.7",
     "webpack-dev-server": "^1.10.1",
     "webpack-stream": "^2.1.0"
   }

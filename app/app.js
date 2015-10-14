@@ -2,10 +2,10 @@
  * Created by youngmoon on 10/14/15.
  */
 
-import angular from 'angular';
-import uib from 'angular-ui-router';
+var angular = require('angular');
+var uib = require('angular-ui-router');
 
-const ngModule = angular.module('homedecoApp', [
+var ngModule = angular.module('homedecoApp', [
     uib
 ])
     .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider',
@@ -13,9 +13,24 @@ const ngModule = angular.module('homedecoApp', [
             $urlRouterProvider.otherwise('/');
             $locationProvider.html5Mode(true);
             $httpProvider.useApplyAsync(true);
+
+            $stateProvider
+                .state('main', {
+                    url: '/',
+                    template: require('./components/main/main.html'),
+                    controller: 'MagazineListController'
+                })
+                .state('detail', {
+                    url: '/view.php',
+                    templateUrl: require('./components/detail/detail.html'),
+                    controller: 'MagazineController'
+                });
+
         }])
-    .run(() => {
-        console.log('hello');
+    .run(($http, CONFIG, Methods) => {
+        // Guest Count
+        var referrer = Methods.GetURLParameter('referrer');
+        $http.put(CONFIG.PageCount_URL + 'guest?referrer=' +  (referrer || ''));
     });
 
 require('./components')(ngModule);

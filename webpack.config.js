@@ -1,12 +1,12 @@
 var webpack = require('webpack');
+var path = require('path');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 var config = {
-	context: __dirname + '/app',
-	entry: './app.js',
+	entry: './app/app.js',
 	output: {
-		path: __dirname + '/app',
-		filename: 'bundle.js'
+		path: path.resolve(__dirname, 'app'),
+		filename: "bundle.js"
 	},
 
 	plugins: [
@@ -22,8 +22,7 @@ var config = {
 	},
 
 	devServer: {
-		port: 3002,
-		historyApiFallback: true
+		port: 3002
 	}
 };
 
@@ -33,4 +32,4 @@ if (process.env.NODE_ENV === 'production') {
 	config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
 
-module.export = config;
+module.exports = config;
