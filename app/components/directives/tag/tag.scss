@@ -1,0 +1,84 @@
+@import '../../../app';
+
+tag {
+  display: none;
+  position: absolute;
+
+  .imagePinMobileLink {
+    display: none;
+  }
+
+  .imagePin {
+    cursor: pointer;
+
+    &:hover {
+
+      & + .pinProductWrapper {
+        display: block;
+      }
+    }
+  }
+
+  .pinProductWrapper {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 90;
+    margin-top: -20px;
+    height: 140px;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: -ms-max-content;
+    width: max-content;
+
+    &:hover {
+      display: block;
+    }
+
+    .pinProductImage {
+      float: left;
+      margin: 10px 0px 10px 10px;
+    }
+
+    .pinProductContent {
+      float: left;
+      margin: 35px 10px 15px 12px;
+
+      .pinProductTitle {
+        color: #fff;
+        white-space: nowrap;
+        font-size: 15px;
+      }
+
+      .pinProductPrice {
+        color: #fff;
+        margin-top: 8px;
+        font-size: 12px;
+      }
+
+      .pinProductButton {
+        color: #fff;
+        margin-top: 10px;
+        background-color: #e97161;
+        text-align: center;
+        font-size: 13px;
+        display: block;
+        height: 25px;
+        line-height: 25px;
+        width: 100px;
+      }
+    }
+  }
+
+  @media #{$mobile} {
+    display: block;
+
+    .imagePinMobileLink {
+      display: block;
+    }
+
+    .imagePin {
+      display: none;
+    }
+  }
+}

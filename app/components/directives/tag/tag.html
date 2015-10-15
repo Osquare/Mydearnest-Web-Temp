@@ -1,3 +1,14 @@
-<section class="tag-wrap">
-
+<section data-ng-if="tag.hasItem">
+    <a class="imagePinMobileLink" href="#" ng-click="pinClick();">
+        <img src="/public/img/pin.png" height="20" class="imagePinMobile">
+    </a>
+    <img src="/public/img/pin.png" height="26" class="imagePin">
+    <div class="pinProductWrapper">
+        <img ng-src="{{ ::tag.item.image }}" height="120" class="pinProductImage">
+        <div class="pinProductContent">
+            <div class="pinProductTitle">{{ ::tag.item.title}}</div>
+            <div class="pinProductPrice">{{ ::tag.item.price}}원</div>
+            <a ng-href="{{ ::tag.item.link }}" target="_blank" class="pinProductButton">구매처로 이동</a>
+        </div>
+    </div>
 </section>

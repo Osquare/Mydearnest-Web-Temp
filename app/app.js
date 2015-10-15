@@ -48,6 +48,7 @@ var ngModule = angular.module('homedecoApp', [
          */
 
         angular.element($window).bind('resize', function () {
+            console.log('hello ?');
             $rootScope.$broadcast('$WindowResize')
         });
     });

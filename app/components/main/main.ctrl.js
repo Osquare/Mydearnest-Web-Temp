@@ -46,7 +46,7 @@ export default (ngModule) => {
              */
             function formatting (data, idx, array) {
                 data.id = data.mag_id;
-                data.img_url = CONFIG.IMAGE_URL.replace(/{id}/gi, data.title_img.img_id);
+                data.img_url = Methods.getImage(data.title_img.img_id);
                 data.text = $sce.trustAsHtml(Methods.escapeHTML(data.title));
 
                 if (array.length - 1 === idx) $scope.scroll_busy = false;

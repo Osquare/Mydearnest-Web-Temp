@@ -30,7 +30,8 @@ var config = {
 				target: 'http://localhost:3002/index.html',
 				secure: false
 			}
-		}
+		},
+		historyApiFallback: true
 	}
 };
 

@@ -4,7 +4,7 @@
 import _ from 'lodash';
 
 export default (ngModule) => {
-    ngModule.service('Methods', function () {
+    ngModule.service('Methods', function (CONFIG) {
 
         var that = this;
 
@@ -88,7 +88,11 @@ export default (ngModule) => {
             var link = self.getLink();
 
 
-        }
+        };
+
+        this.getImage = function (imageId) {
+            return CONFIG.IMAGE_URL.replace(/{id}/gi, imageId);
+        };
 
         this.map = _.map;
     });

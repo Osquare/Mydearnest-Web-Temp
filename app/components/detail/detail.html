@@ -3,27 +3,14 @@
         <div id="Content">
             <div data-ng-bind-html="title" id="MagazineTitle"></div>
             <div id="MagazineImages">
-                <div class="magazineContainer" ng-repeat="page in pages">
+                <div class="magazineContainer" data-ng-repeat="page in pages">
                     <div class="magazineImage">
-                        <img ng-src="http://image.ggumim.co.kr/unsafe/{{page.image.img_id}}/{{page.image.img_id}}" width="100%">
-                        <div class="imagePinWrapper" ng-style="{ top: tag.y + '%', left: tag.x + '%' }" data-ng-repeat="tag in page.tags">
-                            <a class="imagePinMobileLink" href="#">
-                                <img src="./public/img/pin.png" height="20" class="imagePinMobile">
-                            </a>
-
-                            <img src="./public/img/pin.png" height="26" class="imagePin">
-                            <div class="pinProductWrapper">
-                                <img ng-src="{{tag.image}}" height="120" class="pinProductImage">
-                                <div class="pinProductContent">
-                                    <div class="pinProductTitle">{{tag.brand.name + ' ' + tag.model}}</div>
-                                    <div class="pinProductPrice">{{tag.price}}원</div>
-                                    <a href="{{tag.link}}" class="pinProductButton">구매처로 이동</a>
-                                </div>
-                            </div>
-                        </div>
+                        <img data-ng-src="http://image.ggumim.co.kr/unsafe/{{page.image.img_id}}/{{page.image.img_id}}" width="100%">
+                        <tag data-ng-repeat="tag in page.tags" tag="tag" overlay="overlay"
+                             ng-style="{ top: tag.y + '%', left: tag.x + '%' }">
+                        </tag>
                     </div>
-                    <div class="desc-for-magazineImage" ng-bind-html="bindText(page.text)">
-                        <!-- {{page.article.text}} -->
+                    <div class="desc-for-magazineImage" ng-bind-html="page.text">
                     </div>
                 </div>
             </div>
@@ -31,11 +18,11 @@
     </div>
 
     <div id="ProductPopupOverlayWrapper">
-        <div id="ProductPopupOverlay"></div>
+        <div id="ProductPopupOverlay" data-ng-click="close();"></div>
         <div id="ProductPopupWrapper">
             <div id="ProductPopup">
                 <div id="ProductPopupHeader">
-                    <a id="ProductPopupExit" href="#">
+                    <a id="ProductPopupExit" href="#" data-ng-click="close();">
                         <img src="./public/img/exit.png" width="18" alt="X">
                     </a>
                 </div>
