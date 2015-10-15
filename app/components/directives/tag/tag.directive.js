@@ -2,7 +2,7 @@
  * Created by youngmoon on 10/14/15.
  */
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
     ngModule.directive('tag', function () {
         return {
             restrict: 'E',

@@ -2,7 +2,7 @@
  * Created by youngmoon on 10/14/15.
  */
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
     require('./applink/applink.directive')(ngModule);
     require('./banner/banner.directive')(ngModule);
     require('./header/header.directive')(ngModule);

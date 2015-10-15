@@ -10,7 +10,7 @@ var ngModule = angular.module('homedecoApp', [
     uib
 ])
     .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider',
-        function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+        ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) => {
             $urlRouterProvider.otherwise('/');
             $locationProvider.html5Mode(true);
             $httpProvider.useApplyAsync(true);
@@ -28,7 +28,12 @@ var ngModule = angular.module('homedecoApp', [
                 })
                 .state('detail', {
                     url: '/view.php',
-                    templateUrl: require('./components/detail/detail.html'),
+                    resolve: {
+                        MAGAZINE: ['$http', 'CONFIG', 'Methods', function ($http, CONFIG, Methods) {
+                            return $http.get(CONFIG.API_URL + '/' + Methods.GetURLParameter('id'));
+                        }]
+                    },
+                    template: require('./components/detail/detail.html'),
                     controller: 'MagazineController'
                 });
 

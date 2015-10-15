@@ -1,0 +1,30 @@
+@import '../../app';
+
+.homedeco_detail {
+  #Content {
+
+    #MagazineTitle {
+      border-bottom: 2px solid #ccc;
+      color: #888;
+      font-size: 24px;
+      font-family: '고도 M';
+      padding-top: 20px;
+      padding-bottom: 6px;
+    }
+  }
+
+  @media #{$desktop} {
+
+  }
+
+  @media #{$mobile} {
+    #Content {
+      margin: 20px 10px;
+
+      #MagazineTitle {
+        font-size: 16px;
+        padding-bottom: 4px;
+      }
+    }
+  }
+}

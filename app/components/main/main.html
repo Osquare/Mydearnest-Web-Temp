@@ -1,12 +1,12 @@
 <section class="homedeco_main">
-    <div infinite-scroll="loadMore()" infinite-scroll-disabled="scroll_busy" infinite-scroll-distance="2" id="ContentWrapper" class="clearfix">
+    <div infinite-scroll="loadMore()" infinite-scroll-disabled="scroll_busy" infinite-scroll-distance="1" id="ContentWrapper" class="clearfix">
         <div id="Content" class="magazineWrapper clearfix">
-            <a class="magazineItem" href="./view.php?id={{magazine.mag_id}}"
-               ng-style="{ 'background-image':
+            <a class="magazineItem" data-ng-href="/view.php?id={{magazine.id}}"
+               data-ng-style="{ 'background-image':
                'url(http://image.ggumim.co.kr/unsafe/{{magazine.title_img.img_id}}/{{magazine.title_img.img_id}})' }"
-               ng-repeat="magazine in magazines">
+               data-ng-repeat="magazine in magazines">
                 <div class="magazineItemGradient">
-                    <div ng-bind-html="magazine.text" class="magazineItemText"></div>
+                    <div data-ng-bind-html="magazine.text" class="magazineItemText"></div>
                 </div>
             </a>
         </div>

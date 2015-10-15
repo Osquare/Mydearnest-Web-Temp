@@ -2,7 +2,7 @@
  * Created by youngmoon on 10/15/15.
  */
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
     ngModule.directive('appHeader', function () {
         require('./header.scss');
         return {

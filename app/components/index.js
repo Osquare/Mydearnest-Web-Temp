@@ -3,9 +3,10 @@
  */
 
 
-module.exports = function (ngModule) {
-    require('./directives')(ngModule);
+export default (ngModule) => {
     require('./config/config.constant')(ngModule);
+    require('./detail/detail.ctrl')(ngModule);
+    require('./directives')(ngModule);
     require('./main/main.ctrl')(ngModule);
     require('./service/methods')(ngModule);
 };

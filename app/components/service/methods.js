@@ -1,9 +1,9 @@
 /**
  * Created by youngmoon on 10/14/15.
  */
-var _ = require('lodash');
+import _ from 'lodash';
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
     ngModule.service('Methods', function () {
 
         var that = this;

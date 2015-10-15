@@ -2,7 +2,7 @@
  * Created by youngmoon on 10/15/15.
  */
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
     ngModule.value('THROTTLE_MILLISECONDS', null);
     ngModule.directive('infiniteScroll', [
         '$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS', function ($rootScope, $window, $interval, THROTTLE_MILLISECONDS) {

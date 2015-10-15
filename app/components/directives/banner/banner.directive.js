@@ -2,14 +2,18 @@
  * Created by youngmoon on 10/14/15.
  */
 
-module.exports = function (ngModule) {
-    ngModule.directive('banner', function ($window, $document, Methods) {
+export default (ngModule) => {
+    ngModule.directive('banner', function ($window, Methods) {
         require('./banner.scss');
         return {
             restrict: 'E',
             template: require('./banner.html'),
             link: function (scope, el, attr) {
                 var aTag = $('a#HeaderAppLink');
+
+                scope.$on('$stateChangeStart', function () {
+                    scope.noBanner = Methods.GetURLParameter('noBanner');
+                });
 
                 function paint () {
                     aTag.css({

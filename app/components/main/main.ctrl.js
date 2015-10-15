@@ -2,11 +2,10 @@
  * Created by youngmoon on 10/14/15.
  */
 
-module.exports = function (ngModule) {
+export default (ngModule) => {
+    require('./main.scss');
     ngModule.controller('MagazineListController',
         function ($scope, $timeout, $sce, $http, MAGAZINES, CONFIG, Methods) {
-            require('./main.scss');
-
             $scope.scroll_busy = true;
             $scope.last_id = null;
             $scope.magazines = [];

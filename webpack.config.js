@@ -24,7 +24,13 @@ var config = {
 	},
 
 	devServer: {
-		port: 3002
+		port: 3002,
+		proxy: {
+			'/view.php': {
+				target: 'http://localhost:3002/index.html',
+				secure: false
+			}
+		}
 	}
 };
 
