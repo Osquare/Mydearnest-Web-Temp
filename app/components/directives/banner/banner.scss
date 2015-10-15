@@ -15,4 +15,8 @@
       display: none;
     }
   }
+
+  @media #{$mobile} {
+    margin-top: 30px;
+  }
 }

@@ -8,6 +8,40 @@ export default (ngModule) => {
 
         var that = this;
 
+
+        /**
+         *
+         * @returns {string}
+         * @desc
+         *
+         * returning user agent model
+         */
+        this.getUserAgent = () => {
+            return navigator.userAgent.toLocaleLowerCase();
+        };
+
+        /**
+         *
+         * @returns {boolean}r
+         * @desc
+         *
+         * return whether or not the user is using android
+         */
+        this.isAndroid = () => {
+            return that.getUserAgent().search('android') > -1;
+        };
+
+        /**
+         *
+         * @returns {boolean}
+         * @desc
+         *
+         * return whether or not the user is using iphone
+         */
+        this.isiPhone = () => {
+            return that.getUserAgent().search('iphone') > -1;
+        };
+
         /**
          *
          * @param sParam
@@ -16,7 +50,7 @@ export default (ngModule) => {
          *
          * URL 로부터 특정 파라미터의 값을 가져온다.
          */
-        this.GetURLParameter = function (sParam) {
+        this.GetURLParameter = (sParam) => {
             var sPageURL = window.location.search.substring(1);
             var sURLVariables = sPageURL.split('&');
             for (var i = 0; i < sURLVariables.length; i++) {
@@ -35,7 +69,7 @@ export default (ngModule) => {
          *
          * Text 를 HTML 코드로 바꾸어준다.
          */
-        this.escapeHTML = function(text) {
+        this.escapeHTML = (text) => {
             return text && text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace(/\n/gi, '<br>');
         };
 
@@ -48,7 +82,7 @@ export default (ngModule) => {
          *
          * type 값에 해당하는 msgType 을 반환한다. type 이 없으면 19 (magazine) 이 Default.
          */
-        this.shareType = function (type) {
+        this.shareType = (type) => {
             if (!type) return 19;
 
             var types = {
@@ -71,26 +105,34 @@ export default (ngModule) => {
          *
          * id 와 type 으로 알맞는 AppLink 를 반환
          */
-        this.getLink = function () {
+        this.getLink = () => {
 
-            var id = GetURLParameter('id'),
-                type = GetURLParameter('isShare');
+            var id = that.GetURLParameter('id'),
+                type = that.GetURLParameter('isShare');
 
             return 'mydearnest://view?msgType='+ that.shareType(type) + '&id=' + (id || '');
         };
 
-
-        this.gotoApp = function () {
+        /**
+         *  goto Application right away.
+         */
+        this.gotoApp = () => {
             var type = that.GetURLParameter('isShare');
 
             if (!type) return;
 
             var link = self.getLink();
-
-
         };
 
-        this.getImage = function (imageId) {
+        /**
+         *
+         * @param imageId
+         * @returns {string}
+         * @desc
+         *
+         * imageId 를 받아서 해당 이미지 URL 을 만들어서 return 해준다.
+         */
+        this.getImage = (imageId) => {
             return CONFIG.IMAGE_URL.replace(/{id}/gi, imageId);
         };
 
