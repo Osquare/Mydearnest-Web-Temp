@@ -8,8 +8,7 @@ export default (ngModule) => {
             restrict: 'E',
             template: require('./applink.html'),
             link: function (scope, el) {
-
-                scope.$on('$GotoApp', gotoApp);
+                if (Methods.GetURLParameter('isShare')) gotoApp();
 
                 function gotoApp () {
                     var Link = Methods.getLink(),
@@ -21,9 +20,9 @@ export default (ngModule) => {
 
                     setTimeout(function () {
                         if (new Date - openAt < 4000) {
-                            if (isAndroid) {
+                            if (Methods.isAndroid()) {
                                 iframe.attr('src', CONFIG.AndMarket);
-                            } else if (isiPhone) {
+                            } else if (Methods.isiPhone()) {
                                 location.replace(CONFIG.iMarket);
                             }
                         }
