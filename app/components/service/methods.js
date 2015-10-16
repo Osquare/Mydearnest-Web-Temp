@@ -110,7 +110,7 @@ export default (ngModule) => {
             var id = that.GetURLParameter('id'),
                 type = that.GetURLParameter('isShare');
 
-            return 'mydearnest://view?msgType='+ that.shareType(type) + '&id=' + (id || '');
+            return 'mydearnest://view?msgType='+ that.shareType(type) + (id ? '&id=' + id : '');
         };
 
         /**
