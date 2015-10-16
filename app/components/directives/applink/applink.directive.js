@@ -8,7 +8,7 @@ export default (ngModule) => {
             restrict: 'E',
             template: require('./applink.html'),
             link: function (scope, el) {
-                if (Methods.GetURLParameter('isShare')) gotoApp();
+                if (Methods.GetURLParameter('isShare')) Methods.gotoApp();
 
                 function gotoApp () {
                     var Link = Methods.getLink(),

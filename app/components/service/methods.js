@@ -1,12 +1,25 @@
 /**
  * Created by youngmoon on 10/14/15.
  */
+
 import _ from 'lodash';
+import deeplink from 'browser-deeplink';
 
 export default (ngModule) => {
+
     ngModule.service('Methods', function (CONFIG) {
 
         var that = this;
+
+        deeplink.setup({
+            iOS: {
+                appName: 'mydearnest',
+                appId: '992731402'
+            },
+            android: {
+                appId: 'com.osqaure.mydearnest'
+            }
+        });
 
 
         /**
@@ -117,11 +130,7 @@ export default (ngModule) => {
          *  goto Application right away.
          */
         this.gotoApp = () => {
-            var type = that.GetURLParameter('isShare');
-
-            if (!type) return;
-
-            var link = self.getLink();
+            deeplink.open(that.getLink());
         };
 
         /**

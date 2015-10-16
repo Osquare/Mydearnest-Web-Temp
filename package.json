@@ -21,6 +21,7 @@
   "dependencies": {
     "angular": "^1.4.4",
     "angular-ui-router": "^0.2.15",
+    "browser-deeplink": "^1.0.1",
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "ng-infinite-scroll": "^1.2.0",
