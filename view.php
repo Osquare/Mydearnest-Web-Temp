@@ -31,6 +31,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <script src="public/js/imagesloaded.pkgd.min.js"></script>
     </head>
     <body ng-app="homedecoApp">
+        <script src="./dist/applinking.js"></script>
         <!-- Application Header -->
         <app-header></app-header>
 
