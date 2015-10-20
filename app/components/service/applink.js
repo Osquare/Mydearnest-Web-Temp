@@ -129,6 +129,9 @@ export default (ngModule) => {
          * @param {String} APPlink URI
          */
         this.open = function(uri) {
+            var has_safari = navigator.userAgent.indexOf('Safari/')  > -1;
+            var is_ios9    = navigator.userAgent.indexOf('iPhone OS 9_')  > -1;
+
             if (isAndroid()) settings.platform = "android";
             if (isIOS()) settings.platform = "ios";
 
@@ -146,16 +149,23 @@ export default (ngModule) => {
                 timeout = setTimeout(openAppStore(Date.now()), settings.delay);
             }
 
-            var iframe = document.createElement("iframe");
-            iframe.onload = function() {
-                clearTimeout(timeout);
-                iframe.parentNode.removeChild(iframe);
-                window.location.href = uri;
-            };
+            if (has_safari || !is_ios9) {
 
-            iframe.src = uri;
-            iframe.setAttribute("style", "display:none;");
-            document.body.appendChild(iframe);
+
+
+                var iframe = document.createElement("iframe");
+                iframe.onload = function() {
+                    clearTimeout(timeout);
+                    iframe.parentNode.removeChild(iframe);
+                    window.location.href = uri;
+                };
+
+                iframe.src = uri;
+                iframe.setAttribute("style", "display:none;");
+                document.body.appendChild(iframe);
+            } else {
+                window.location.assign(uri);
+            }
         };
     });
 };
