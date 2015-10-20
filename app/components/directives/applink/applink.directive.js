@@ -14,14 +14,15 @@ export default (ngModule) => {
                     var Link = Methods.getLink(),
                         LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
                         openAt = new Date,
-                        iframe = el.find('iframe');
-                    //chrome25 = uagentLow.search('chrome') > -1 &&
-                    //    navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
+                        iframe = el.find('iframe'),
+                        chrome25 = uagentLow.search('chrome') > -1 &&
+                            navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
 
                     setTimeout(function () {
                         if (new Date - openAt < 4000) {
                             if (Methods.isAndroid()) {
-                                iframe.attr('src', CONFIG.AndMarket);
+                                if (chrome25) iframe.attr('src', CONFIG.AndMarket);
+                                else iframe.attr('src', CONFIG.AndMarket);
                             } else if (Methods.isiPhone()) {
                                 location.replace(CONFIG.iMarket);
                             }

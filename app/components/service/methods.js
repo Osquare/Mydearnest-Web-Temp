@@ -11,16 +11,6 @@ export default (ngModule) => {
 
         var that = this;
 
-        deeplink.setup({
-            iOS: {
-                appName: 'mydearnest',
-                appId: '992731402'
-            },
-            android: {
-                appId: 'com.osqaure.mydearnest'
-            }
-        });
-
 
         /**
          *
@@ -128,6 +118,16 @@ export default (ngModule) => {
             if (that.isAndroid()) return LinkAnd;
             if (that.isiPhone()) return Link;
         };
+
+        deeplink.setup({
+            iOS: {
+                appName: 'mydearnest',
+                appId: '992731402'
+            },
+            android: {
+                appId: 'com.osquare.mydearnest'
+            }
+        });
 
         /**
          *  goto Application right away.
