@@ -115,7 +115,7 @@ export default (ngModule) => {
                 Link = 'mydearnest://view?msgType='+ that.shareType(type) + (id ? '&id=' + id : ''),
                 LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
 
-            if (that.isAndroid()) return LinkAnd;
+            //if (that.isAndroid()) return LinkAnd;
             if (that.isiPhone()) return Link;
         };
 
