@@ -12,6 +12,20 @@ export default (ngModule) => {
         }
 
         /**
+         * URL Paramters
+         */
+        var GetURLParameter = (sParam) => {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        };
+
+        /**
          * Set up scope variables and settings
          */
         var timeout;
@@ -164,6 +178,9 @@ export default (ngModule) => {
                 iframe.setAttribute("style", "display:none;");
                 document.body.appendChild(iframe);
             } else {
+                if (GetURLParameter('test')) {
+                    alert('ios9');
+                }
                 window.location.assign(uri);
             }
         };
