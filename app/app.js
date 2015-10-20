@@ -43,6 +43,9 @@ var ngModule = angular.module('homedecoApp', [
         var referrer = Methods.GetURLParameter('referrer');
         $http.put(CONFIG.PageCount_URL + 'guest?referrer=' +  (referrer || ''));
 
+        // App Link
+        if (Methods.GetURLParameter('isShare')) Methods.gotoApp();
+
         /**
          *  $rootScope Window Size Change Event
          */

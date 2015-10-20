@@ -9,4 +9,5 @@ export default (ngModule) => {
     require('./directives')(ngModule);
     require('./main/main.ctrl')(ngModule);
     require('./service/methods')(ngModule);
+    require('./service/applink')(ngModule);
 };

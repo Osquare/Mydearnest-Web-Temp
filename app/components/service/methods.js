@@ -3,11 +3,10 @@
  */
 
 import _ from 'lodash';
-import deeplink from 'browser-deeplink';
 
 export default (ngModule) => {
 
-    ngModule.service('Methods', function (CONFIG) {
+    ngModule.service('Methods', function (CONFIG, APPLINK) {
 
         var that = this;
 
@@ -109,30 +108,17 @@ export default (ngModule) => {
          * id 와 type 으로 알맞는 AppLink 를 반환
          */
         this.getLink = () => {
-
             var id = that.GetURLParameter('id'),
                 type = that.GetURLParameter('isShare'),
-                Link = 'mydearnest://view?msgType='+ that.shareType(type) + (id ? '&id=' + id : ''),
-                LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end';
-
+                Link = 'mydearnest://view?msgType='+ that.shareType(type) + (id ? '&id=' + id : '');
             return Link;
         };
-
-        deeplink.setup({
-            iOS: {
-                appName: 'mydearnest',
-                appId: '992731402'
-            },
-            android: {
-                appId: 'com.osquare.mydearnest'
-            }
-        });
 
         /**
          *  goto Application right away.
          */
         this.gotoApp = () => {
-            deeplink.open(that.getLink());
+            APPLINK.open(that.getLink());
         };
 
         /**
