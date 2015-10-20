@@ -4,7 +4,7 @@
 
 export default (ngModule) => {
     ngModule.controller('TESTController',
-        function ($scope, Methods) {
+        function ($scope, $timeout) {
 
             $scope.iosLocation = function () {
                 window.location = "mydearnest://view?msgType=19&id=318002";
@@ -31,5 +31,10 @@ export default (ngModule) => {
                 window.location.assign("intent://view?msgType=19&id=318002#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end");
             };
 
+            $timeout(function () {
+                $('#iosapplinkbutton').click(function () {
+                    console.log('clicked');
+                });
+            });
         });
 };
