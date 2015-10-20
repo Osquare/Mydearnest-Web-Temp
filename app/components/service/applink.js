@@ -3,27 +3,13 @@
  */
 
 export default (ngModule) => {
-    ngModule.service('APPLINK', function () {
+    ngModule.service('APPLINK', function ($timeout) {
         /**
          * Cannot run without DOM or user-agent
          */
         if (!window.document || !window.navigator) {
             return;
         }
-
-        /**
-         * URL Paramters
-         */
-        var GetURLParameter = (sParam) => {
-            var sPageURL = window.location.search.substring(1);
-            var sURLVariables = sPageURL.split('&');
-            for (var i = 0; i < sURLVariables.length; i++) {
-                var sParameterName = sURLVariables[i].split('=');
-                if (sParameterName[0] == sParam) {
-                    return sParameterName[1];
-                }
-            }
-        };
 
         /**
          * Set up scope variables and settings
@@ -160,16 +146,13 @@ export default (ngModule) => {
             }
 
             if (settings.fallback) {
-                timeout = setTimeout(openAppStore(Date.now()), settings.delay);
+                timeout = $timeout(function () {openAppStore(Date.now())}, settings.delay);
             }
 
             if (has_safari || !is_ios9) {
-
-
-
                 var iframe = document.createElement("iframe");
                 iframe.onload = function() {
-                    clearTimeout(timeout);
+                    $timeout.clear(timeout);
                     iframe.parentNode.removeChild(iframe);
                     window.location.href = uri;
                 };
@@ -178,9 +161,6 @@ export default (ngModule) => {
                 iframe.setAttribute("style", "display:none;");
                 document.body.appendChild(iframe);
             } else {
-                if (GetURLParameter('test')) {
-                    alert('ios9');
-                }
                 window.location.assign(uri);
             }
         };

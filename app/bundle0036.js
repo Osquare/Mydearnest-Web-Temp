@@ -1,9 +1,9 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	// The require function
+/******/ 	var installedModules = {};
 
-	/******/ 	var installedModules = {};
-	/******/ 	function __webpack_require__(moduleId) {
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
 
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
@@ -52,6 +52,7 @@
 
 	var angular = __webpack_require__(1);
 	var uib = __webpack_require__(3);
+	var is = __webpack_require__(4);
 
 	var ngModule = angular.module('homedecoApp', [uib]).config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 	    $urlRouterProvider.otherwise('/');
@@ -65,11 +66,16 @@
 	                return $http.get(CONFIG.API_URL);
 	            }]
 	        },
-	        template: __webpack_require__(4),
+	        template: __webpack_require__(5),
 	        controller: 'MagazineListController'
 	    }).state('detail', {
 	        url: '/view.php',
-	        templateUrl: __webpack_require__(5),
+	        resolve: {
+	            MAGAZINE: ['$http', 'CONFIG', 'Methods', function ($http, CONFIG, Methods) {
+	                return $http.get(CONFIG.API_URL + '/' + Methods.GetURLParameter('id'));
+	            }]
+	        },
+	        template: __webpack_require__(6),
 	        controller: 'MagazineController'
 	    });
 	}]).run(["$rootScope", "$window", "$http", "CONFIG", "Methods", function ($rootScope, $window, $http, CONFIG, Methods) {
@@ -77,16 +83,18 @@
 	    var referrer = Methods.GetURLParameter('referrer');
 	    $http.put(CONFIG.PageCount_URL + 'guest?referrer=' + (referrer || ''));
 
+	    // App Link
+	    if (Methods.GetURLParameter('isShare')) Methods.gotoApp();
+
 	    /**
 	     *  $rootScope Window Size Change Event
 	     */
-
 	    angular.element($window).bind('resize', function () {
 	        $rootScope.$broadcast('$WindowResize');
 	    });
 	}]);
 
-	__webpack_require__(6)(ngModule);
+	__webpack_require__(7)(ngModule);
 
 /***/ },
 /* 1 */
@@ -33384,30 +33392,196 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	module.exports = "<section class=\"homedeco_main\">\n    <div infinite-scroll=\"loadMore()\" infinite-scroll-disabled=\"scroll_busy\" infinite-scroll-distance=\"2\" id=\"ContentWrapper\" class=\"clearfix\">\n        <div id=\"Content\" class=\"magazineWrapper clearfix\">\n            <a class=\"magazineItem\" href=\"./view.php?id={{magazine.mag_id}}\"\n               ng-style=\"{ 'background-image':\n               'url(http://image.ggumim.co.kr/unsafe/{{magazine.title_img.img_id}}/{{magazine.title_img.img_id}})' }\"\n               ng-repeat=\"magazine in magazines\">\n                <div class=\"magazineItemGradient\">\n                    <div ng-bind-html=\"magazine.text\" class=\"magazineItemText\"></div>\n                </div>\n            </a>\n        </div>\n    </div>\n</section>\n\n"
+	/* ng-infinite-scroll - v1.2.0 - 2014-12-02 */
+	var mod;
+
+	mod = angular.module('infinite-scroll', []);
+
+	mod.value('THROTTLE_MILLISECONDS', null);
+
+	mod.directive('infiniteScroll', [
+	  '$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS', function($rootScope, $window, $interval, THROTTLE_MILLISECONDS) {
+	    return {
+	      scope: {
+	        infiniteScroll: '&',
+	        infiniteScrollContainer: '=',
+	        infiniteScrollDistance: '=',
+	        infiniteScrollDisabled: '=',
+	        infiniteScrollUseDocumentBottom: '='
+	      },
+	      link: function(scope, elem, attrs) {
+	        var changeContainer, checkWhenEnabled, container, handleInfiniteScrollContainer, handleInfiniteScrollDisabled, handleInfiniteScrollDistance, handleInfiniteScrollUseDocumentBottom, handler, height, immediateCheck, offsetTop, pageYOffset, scrollDistance, scrollEnabled, throttle, useDocumentBottom, windowElement;
+	        windowElement = angular.element($window);
+	        scrollDistance = null;
+	        scrollEnabled = null;
+	        checkWhenEnabled = null;
+	        container = null;
+	        immediateCheck = true;
+	        useDocumentBottom = false;
+	        height = function(elem) {
+	          elem = elem[0] || elem;
+	          if (isNaN(elem.offsetHeight)) {
+	            return elem.document.documentElement.clientHeight;
+	          } else {
+	            return elem.offsetHeight;
+	          }
+	        };
+	        offsetTop = function(elem) {
+	          if (!elem[0].getBoundingClientRect || elem.css('none')) {
+	            return;
+	          }
+	          return elem[0].getBoundingClientRect().top + pageYOffset(elem);
+	        };
+	        pageYOffset = function(elem) {
+	          elem = elem[0] || elem;
+	          if (isNaN(window.pageYOffset)) {
+	            return elem.document.documentElement.scrollTop;
+	          } else {
+	            return elem.ownerDocument.defaultView.pageYOffset;
+	          }
+	        };
+	        handler = function() {
+	          var containerBottom, containerTopOffset, elementBottom, remaining, shouldScroll;
+	          if (container === windowElement) {
+	            containerBottom = height(container) + pageYOffset(container[0].document.documentElement);
+	            elementBottom = offsetTop(elem) + height(elem);
+	          } else {
+	            containerBottom = height(container);
+	            containerTopOffset = 0;
+	            if (offsetTop(container) !== void 0) {
+	              containerTopOffset = offsetTop(container);
+	            }
+	            elementBottom = offsetTop(elem) - containerTopOffset + height(elem);
+	          }
+	          if (useDocumentBottom) {
+	            elementBottom = height((elem[0].ownerDocument || elem[0].document).documentElement);
+	          }
+	          remaining = elementBottom - containerBottom;
+	          shouldScroll = remaining <= height(container) * scrollDistance + 1;
+	          if (shouldScroll) {
+	            checkWhenEnabled = true;
+	            if (scrollEnabled) {
+	              if (scope.$$phase || $rootScope.$$phase) {
+	                return scope.infiniteScroll();
+	              } else {
+	                return scope.$apply(scope.infiniteScroll);
+	              }
+	            }
+	          } else {
+	            return checkWhenEnabled = false;
+	          }
+	        };
+	        throttle = function(func, wait) {
+	          var later, previous, timeout;
+	          timeout = null;
+	          previous = 0;
+	          later = function() {
+	            var context;
+	            previous = new Date().getTime();
+	            $interval.cancel(timeout);
+	            timeout = null;
+	            func.call();
+	            return context = null;
+	          };
+	          return function() {
+	            var now, remaining;
+	            now = new Date().getTime();
+	            remaining = wait - (now - previous);
+	            if (remaining <= 0) {
+	              clearTimeout(timeout);
+	              $interval.cancel(timeout);
+	              timeout = null;
+	              previous = now;
+	              return func.call();
+	            } else {
+	              if (!timeout) {
+	                return timeout = $interval(later, remaining, 1);
+	              }
+	            }
+	          };
+	        };
+	        if (THROTTLE_MILLISECONDS != null) {
+	          handler = throttle(handler, THROTTLE_MILLISECONDS);
+	        }
+	        scope.$on('$destroy', function() {
+	          return container.unbind('scroll', handler);
+	        });
+	        handleInfiniteScrollDistance = function(v) {
+	          return scrollDistance = parseFloat(v) || 0;
+	        };
+	        scope.$watch('infiniteScrollDistance', handleInfiniteScrollDistance);
+	        handleInfiniteScrollDistance(scope.infiniteScrollDistance);
+	        handleInfiniteScrollDisabled = function(v) {
+	          scrollEnabled = !v;
+	          if (scrollEnabled && checkWhenEnabled) {
+	            checkWhenEnabled = false;
+	            return handler();
+	          }
+	        };
+	        scope.$watch('infiniteScrollDisabled', handleInfiniteScrollDisabled);
+	        handleInfiniteScrollDisabled(scope.infiniteScrollDisabled);
+	        handleInfiniteScrollUseDocumentBottom = function(v) {
+	          return useDocumentBottom = v;
+	        };
+	        scope.$watch('infiniteScrollUseDocumentBottom', handleInfiniteScrollUseDocumentBottom);
+	        handleInfiniteScrollUseDocumentBottom(scope.infiniteScrollUseDocumentBottom);
+	        changeContainer = function(newContainer) {
+	          if (container != null) {
+	            container.unbind('scroll', handler);
+	          }
+	          container = newContainer;
+	          if (newContainer != null) {
+	            return container.bind('scroll', handler);
+	          }
+	        };
+	        changeContainer(windowElement);
+	        handleInfiniteScrollContainer = function(newContainer) {
+	          if ((newContainer == null) || newContainer.length === 0) {
+	            return;
+	          }
+	          if (newContainer instanceof HTMLElement) {
+	            newContainer = angular.element(newContainer);
+	          } else if (typeof newContainer.append === 'function') {
+	            newContainer = angular.element(newContainer[newContainer.length - 1]);
+	          } else if (typeof newContainer === 'string') {
+	            newContainer = angular.element(document.querySelector(newContainer));
+	          }
+	          if (newContainer != null) {
+	            return changeContainer(newContainer);
+	          } else {
+	            throw new Exception("invalid infinite-scroll-container attribute.");
+	          }
+	        };
+	        scope.$watch('infiniteScrollContainer', handleInfiniteScrollContainer);
+	        handleInfiniteScrollContainer(scope.infiniteScrollContainer || []);
+	        if (attrs.infiniteScrollParent != null) {
+	          changeContainer(angular.element(elem.parent()));
+	        }
+	        if (attrs.infiniteScrollImmediateCheck != null) {
+	          immediateCheck = scope.$eval(attrs.infiniteScrollImmediateCheck);
+	        }
+	        return $interval((function() {
+	          if (immediateCheck) {
+	            return handler();
+	          }
+	        }), 0, 1);
+	      }
+	    };
+	  }
+	]);
+
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = "<section class=\"detail-wrapper\">\n    \n</section>"
+	module.exports = "<section class=\"homedeco_main\">\n    <div infinite-scroll=\"loadMore()\" infinite-scroll-disabled=\"scroll_busy\" infinite-scroll-distance=\"1\" id=\"ContentWrapper\" class=\"clearfix\">\n        <div id=\"Content\" class=\"magazineWrapper clearfix\">\n            <a class=\"magazineItem\" data-ng-href=\"/view.php?id={{magazine.id}}\"\n               data-ng-style=\"{ 'background-image':\n               'url(http://image.ggumim.co.kr/unsafe/{{magazine.title_img.img_id}}/{{magazine.title_img.img_id}})' }\"\n               data-ng-repeat=\"magazine in magazines\">\n                <div class=\"magazineItemGradient\">\n                    <div data-ng-bind-html=\"magazine.text\" class=\"magazineItemText\"></div>\n                </div>\n            </a>\n        </div>\n    </div>\n</section>\n\n"
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	/**
-	 * Created by youngmoon on 10/14/15.
-	 */
-
-	'use strict';
-
-	module.exports = function (ngModule) {
-	    __webpack_require__(7)(ngModule);
-	    __webpack_require__(22)(ngModule);
-	    __webpack_require__(23)(ngModule);
-	    __webpack_require__(26)(ngModule);
-	};
+	module.exports = "<section class=\"homedeco_detail\">\n    <div id=\"ContentWrapper\">\n        <div id=\"Content\">\n            <div data-ng-bind-html=\"title\" id=\"MagazineTitle\"></div>\n            <div id=\"MagazineImages\">\n                <div class=\"magazineContainer\" data-ng-repeat=\"page in pages\">\n                    <div class=\"magazineImage\">\n                        <img data-ng-src=\"http://image.ggumim.co.kr/unsafe/{{page.image.img_id}}/{{page.image.img_id}}\" width=\"100%\">\n                        <tag data-ng-repeat=\"tag in page.tags\" tag=\"tag\" overlay=\"overlay\"\n                             ng-style=\"{ top: tag.y + '%', left: tag.x + '%' }\">\n                        </tag>\n                    </div>\n                    <div class=\"desc-for-magazineImage\" ng-bind-html=\"page.text\">\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div id=\"ProductPopupOverlayWrapper\">\n        <div id=\"ProductPopupOverlay\" data-ng-click=\"close();\"></div>\n        <div id=\"ProductPopupWrapper\">\n            <div id=\"ProductPopup\">\n                <div id=\"ProductPopupHeader\">\n                    <a id=\"ProductPopupExit\" href=\"#\" data-ng-click=\"close();\">\n                        <img src=\"./public/img/exit.png\" width=\"18\" alt=\"X\">\n                    </a>\n                </div>\n                <div id=\"ProductPopupContent\" class=\"clearfix\">\n                    <img id=\"ProductPopupImage\" src=\"http://shopping.phinf.naver.net/main_7765758/7765758043.jpg\">\n                    <div id=\"ProductPopupText\">\n                        <div id=\"ProductPopupTitle\"></div>\n                        <div id=\"ProductPopupPrice\"></div>\n                    </div>\n                    <a target=\"_blank\" href=\"#\" id=\"ProductPopupButton\">구매처로 이동</a>\n                </div>\n            </div>\n        </div>\n    </div>\n</section>\n"
 
 /***/ },
 /* 7 */
@@ -33419,16 +33593,24 @@
 
 	'use strict';
 
-	module.exports = function (ngModule) {
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
 	    __webpack_require__(8)(ngModule);
-	    __webpack_require__(10)(ngModule);
-	    __webpack_require__(16)(ngModule);
-	    __webpack_require__(20)(ngModule);
+	    __webpack_require__(9)(ngModule);
+	    __webpack_require__(14)(ngModule);
+	    __webpack_require__(28)(ngModule);
+	    __webpack_require__(31)(ngModule);
+	    __webpack_require__(34)(ngModule);
 	};
+
+	module.exports = exports['default'];
 
 /***/ },
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	/**
 	 * Created by youngmoon on 10/14/15.
@@ -33437,104 +33619,68 @@
 	'use strict';
 
 	module.exports = function (ngModule) {
-	    ngModule.directive('applink', function () {
-	        return {
-	            restrict: 'E',
-	            template: __webpack_require__(9),
-	            link: function link(scope, el, attr) {
-
-	                var gotoApp17 = function gotoApp17() {
-	                    var uagentLow = navigator.userAgent.toLocaleLowerCase(),
-	                        isiPhone = uagentLow.search('iphone') > -1,
-	                        isAndroid = uagentLow.search('android') > -1,
-	                        iMarket = 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-	                        AndMarket = 'market://details?id=com.osquare.mydearnest',
-	                        Link = getLink(),
-	                        LinkAnd = Link + '#Intent;scheme=mydearnest;package=com.osquare.mydearnest;end',
-	                        openAt = new Date(),
-	                        iframe = angular.element('#applink'),
-	                        chrome25 = uagentLow.search('chrome') > -1 && navigator.appVersion.match(/Chrome\/\d+.\d+/)[0].split('/')[1] > 25;
-
-	                    setTimeout(function () {
-	                        if (new Date() - openAt < 4000) {
-	                            if (isAndroid) {
-	                                iframe.attr('src', AndMarket);
-	                            } else if (isiPhone) {
-	                                location.replace(iMarket);
-	                            }
-	                        }
-	                    }, 3000);
-
-	                    if (isAndroid) {
-	                        iframe.attr('src', LinkAnd);
-	                    } else if (isiPhone) {
-	                        console.log(iframe, Link);
-	                        iframe.attr('src', Link);
-	                    }
-	                };
-	            }
-	        };
+	    ngModule.constant('CONFIG', {
+	        API_URL: 'http://api.ggumim.co.kr/1.7/magazines',
+	        IMAGE_URL: 'http://image.ggumim.co.kr/unsafe/{id}/{id}',
+	        PageCount_URL: 'http://api.ggumim.co.kr/api/count/',
+	        iMarket: 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
+	        AndMarket: 'market://details?id=com.osquare.mydearnest'
 	    });
 	};
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<section class=\"applink-wrap\">\n    <iframe data-ng-src=\"{{}}\"></iframe>\n</section>"
+	/**
+	 * Created by youngmoon on 10/15/15.
+	 */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    __webpack_require__(10);
+	    ngModule.controller('MagazineController', ["$scope", "$http", "$sce", "MAGAZINE", "CONFIG", "Methods", function ($scope, $http, $sce, MAGAZINE, CONFIG, Methods) {
+	        $http.put(CONFIG.PageCount_URL + 'page');
+	        $scope.magazine = MAGAZINE.data.data;
+	        $scope.title = $sce.trustAsHtml(Methods.escapeHTML($scope.magazine.title));
+	        $scope.pages = [];
+
+	        $scope.close = function () {
+	            $('#ProductPopupOverlayWrapper').removeClass('active');
+	        };
+
+	        Methods.map($scope.magazine.pages, function (data) {
+	            data.text = $sce.trustAsHtml(Methods.escapeHTML(data.text));
+	            $scope.pages.push(data);
+	        });
+	    }]);
+	};
+
+	module.exports = exports['default'];
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Created by youngmoon on 10/14/15.
-	 */
-
-	'use strict';
-
-	module.exports = function (ngModule) {
-	    ngModule.directive('banner', ["$window", "$document", "Methods", function ($window, $document, Methods) {
-	        __webpack_require__(11);
-	        return {
-	            restrict: 'E',
-	            template: __webpack_require__(15),
-	            link: function link(scope, el, attr) {
-	                var aTag = $('a#HeaderAppLink');
-
-	                function paint() {
-	                    aTag.css({
-	                        width: $window.innerWidth,
-	                        height: $window.innerWidth / 2 - 1
-	                    });
-	                }
-
-	                paint();
-
-	                scope.$on('$WindowResize', paint);
-	            }
-	        };
-	    }]);
-	};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(12);
+	var content = __webpack_require__(11);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(14)(content, {});
+	var update = __webpack_require__(13)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./banner.scss", function() {
-				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./banner.scss");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./detail.scss", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./detail.scss");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -33544,21 +33690,21 @@
 	}
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(13)();
+	exports = module.exports = __webpack_require__(12)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".banner-wrap #HeaderAppLink {\n  display: block;\n  background: url(\"/app/images/appLinkImage.png\");\n  background-repeat: no-repeat;\n  -webkit-background-size: cover;\n  background-size: cover; }\n\n@media (min-width: 1024px) {\n  .banner-wrap #HeaderAppLink {\n    display: none; } }\n", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\n.homedeco_detail #Content #MagazineTitle {\n  border-bottom: 2px solid #ccc;\n  color: #888;\n  font-size: 24px;\n  font-family: '\\ACE0\\B3C4   M';\n  padding-top: 20px;\n  padding-bottom: 6px; }\n\n.homedeco_detail #Content #MagazineImages {\n  margin-top: 30px; }\n  .homedeco_detail #Content #MagazineImages .magazineImage {\n    position: relative;\n    margin-top: 30px;\n    font-size: 0px; }\n  .homedeco_detail #Content #MagazineImages .magazineImage:hover tag {\n    display: block; }\n  .homedeco_detail #Content #MagazineImages .desc-for-magazineImage {\n    padding-top: 30px;\n    text-align: center;\n    line-height: 1.3;\n    font-size: 16px; }\n\n.homedeco_detail #ProductPopupOverlayWrapper {\n  display: none; }\n\n@media (max-width: 1023px) {\n  .homedeco_detail #ProductPopupOverlayWrapper.active {\n    display: block; }\n  .homedeco_detail #ProductPopupOverlayWrapper {\n    position: fixed;\n    z-index: 1000;\n    top: 0;\n    left: 0;\n    height: 100%;\n    width: 100%; }\n  .homedeco_detail #ProductPopupOverlay {\n    background: rgba(0, 0, 0, 0.6);\n    position: fixed;\n    height: 100%;\n    width: 100%; }\n  .homedeco_detail #ProductPopupWrapper {\n    max-height: 100%;\n    margin-left: 10px;\n    margin-right: 10px;\n    position: relative; }\n  .homedeco_detail #ProductPopup {\n    position: relative;\n    background: white;\n    margin: 0 auto;\n    width: 100%;\n    max-width: 100%; }\n  .homedeco_detail #ProductPopupHeader {\n    position: absolute;\n    right: -9px;\n    top: -9px; }\n  .homedeco_detail #ProductPopupContent {\n    padding: 10px; }\n  .homedeco_detail #ProductPopupImage {\n    width: 100%; }\n  .homedeco_detail #ProductPopupImage,\n  .homedeco_detail #ProductPopupPrice,\n  .homedeco_detail #ProductPopupButton {\n    margin-bottom: 10px; }\n  .homedeco_detail #ProductPopupText {\n    width: 50%;\n    float: left; }\n  .homedeco_detail #ProductPopupTitle,\n  .homedeco_detail #ProductPopupPrice {\n    padding-left: 2px; }\n  .homedeco_detail #ProductPopupTitle {\n    font-size: 16px;\n    color: #444; }\n  .homedeco_detail #ProductPopupPrice {\n    margin-top: 5px;\n    font-size: 14px;\n    color: #888; }\n  .homedeco_detail #ProductPopupButton {\n    float: right;\n    display: block;\n    background-color: #e97161;\n    color: #fff;\n    text-align: center;\n    font-size: 14px;\n    width: 45%;\n    height: 30px;\n    line-height: 30px; }\n  .homedeco_detail #Content {\n    margin: 20px 10px; }\n    .homedeco_detail #Content #MagazineTitle {\n      font-size: 16px;\n      padding-bottom: 4px; }\n    .homedeco_detail #Content #MagazineImages {\n      margin-top: 20px; }\n      .homedeco_detail #Content #MagazineImages .magazineImage {\n        margin-top: 15px; }\n      .homedeco_detail #Content #MagazineImages .desc-for-magazineImage {\n        padding-top: 15px;\n        text-align: center;\n        font-size: 13px; } }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*
@@ -33614,7 +33760,7 @@
 
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -33839,13 +33985,122 @@
 
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<section class=\"banner-wrap\">\n    <div id=\"HeaderToApp\">\n        <a id=\"HeaderAppLink\" href=\"\"\n           class=\"HeaderAppLink\">\n        </a>\n    </div>\n</section>\n\n"
+	/**
+	 * Created by youngmoon on 10/14/15.
+	 */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    __webpack_require__(15)(ngModule);
+	    __webpack_require__(19)(ngModule);
+	    __webpack_require__(23)(ngModule);
+	    __webpack_require__(24)(ngModule);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by youngmoon on 10/14/15.
+	 */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    ngModule.directive('banner', ["$window", "CONFIG", "Methods", function ($window, CONFIG, Methods) {
+	        __webpack_require__(16);
+	        return {
+	            restrict: 'E',
+	            template: __webpack_require__(18),
+	            link: function link(scope, el, attr) {
+	                var aTag = el.find('#HeaderAppLink');
+
+	                function paint() {
+	                    aTag.css({
+	                        width: $window.innerWidth,
+	                        height: $window.innerWidth / 2 - 1
+	                    });
+	                    if (Methods.isAndroid()) aTag.attr('href', CONFIG.AndMarket);
+	                    if (Methods.isiPhone()) aTag.attr('href', CONFIG.iMarket);
+	                }
+
+	                paint();
+
+	                scope.$on('$WindowResize', paint);
+
+	                scope.$on('$stateChangeStart', function () {
+	                    scope.noBanner = Methods.GetURLParameter('noBanner');
+	                });
+	            }
+	        };
+	    }]);
+	};
+
+	module.exports = exports['default'];
 
 /***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(17);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(13)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./banner.scss", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./banner.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(12)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".banner-wrap #HeaderAppLink {\n  display: block;\n  background: url(\"/app/images/appLinkImage.png\");\n  background-repeat: no-repeat;\n  -webkit-background-size: cover;\n  background-size: cover; }\n\n@media (min-width: 1024px) {\n  .banner-wrap #HeaderAppLink {\n    display: none; } }\n\n@media (max-width: 1023px) {\n  .banner-wrap {\n    margin-top: 30px; } }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	module.exports = "<section class=\"banner-wrap\">\n    <div id=\"HeaderToApp\" data-ng-hide=\"noBanner\">\n        <a id=\"HeaderAppLink\" href=\"https://play.google.com/store/apps/details?id=com.osquare.mydearnest\"\n           class=\"HeaderAppLink\">\n        </a>\n    </div>\n</section>\n\n"
+
+/***/ },
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33854,28 +34109,34 @@
 
 	'use strict';
 
-	module.exports = function (ngModule) {
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
 	    ngModule.directive('appHeader', function () {
-	        __webpack_require__(17);
+	        __webpack_require__(20);
 	        return {
 	            restrict: 'E',
-	            template: __webpack_require__(19),
+	            template: __webpack_require__(22),
 	            link: function link(scope, el) {}
 	        };
 	    });
 	};
 
+	module.exports = exports['default'];
+
 /***/ },
-/* 17 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(18);
+	var content = __webpack_require__(21);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(14)(content, {});
+	var update = __webpack_require__(13)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -33892,10 +34153,10 @@
 	}
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(13)();
+	exports = module.exports = __webpack_require__(12)();
 	// imports
 
 
@@ -33906,13 +34167,201 @@
 
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = "<div id=\"Header\">\n    <a id=\"HeaderLogoButton\" href=\"/\">\n        <img id=\"HeaderLogo\" height=\"30\" src=\"/app/images/logo.png\" alt=\"집꾸미기\">\n    </a>\n</div>"
 
 /***/ },
-/* 20 */
+/* 23 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by youngmoon on 10/15/15.
+	 */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    ngModule.value('THROTTLE_MILLISECONDS', null);
+	    ngModule.directive('infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE_MILLISECONDS', function ($rootScope, $window, $interval, THROTTLE_MILLISECONDS) {
+	        return {
+	            scope: {
+	                infiniteScroll: '&',
+	                infiniteScrollContainer: '=',
+	                infiniteScrollDistance: '=',
+	                infiniteScrollDisabled: '=',
+	                infiniteScrollUseDocumentBottom: '='
+	            },
+	            link: function link(scope, elem, attrs) {
+	                var changeContainer, checkWhenEnabled, container, handleInfiniteScrollContainer, handleInfiniteScrollDisabled, handleInfiniteScrollDistance, handleInfiniteScrollUseDocumentBottom, handler, height, immediateCheck, offsetTop, pageYOffset, scrollDistance, scrollEnabled, throttle, useDocumentBottom, windowElement;
+	                windowElement = angular.element($window);
+	                scrollDistance = null;
+	                scrollEnabled = null;
+	                checkWhenEnabled = null;
+	                container = null;
+	                immediateCheck = true;
+	                useDocumentBottom = false;
+	                height = function (elem) {
+	                    elem = elem[0] || elem;
+	                    if (isNaN(elem.offsetHeight)) {
+	                        return elem.document.documentElement.clientHeight;
+	                    } else {
+	                        return elem.offsetHeight;
+	                    }
+	                };
+	                offsetTop = function (elem) {
+	                    if (!elem[0].getBoundingClientRect || elem.css('none')) {
+	                        return;
+	                    }
+	                    return elem[0].getBoundingClientRect().top + pageYOffset(elem);
+	                };
+	                pageYOffset = function (elem) {
+	                    elem = elem[0] || elem;
+	                    if (isNaN(window.pageYOffset)) {
+	                        return elem.document.documentElement.scrollTop;
+	                    } else {
+	                        return elem.ownerDocument.defaultView.pageYOffset;
+	                    }
+	                };
+	                handler = function () {
+	                    var containerBottom, containerTopOffset, elementBottom, remaining, shouldScroll;
+	                    if (container === windowElement) {
+	                        containerBottom = height(container) + pageYOffset(container[0].document.documentElement);
+	                        elementBottom = offsetTop(elem) + height(elem);
+	                    } else {
+	                        containerBottom = height(container);
+	                        containerTopOffset = 0;
+	                        if (offsetTop(container) !== void 0) {
+	                            containerTopOffset = offsetTop(container);
+	                        }
+	                        elementBottom = offsetTop(elem) - containerTopOffset + height(elem);
+	                    }
+	                    if (useDocumentBottom) {
+	                        elementBottom = height((elem[0].ownerDocument || elem[0].document).documentElement);
+	                    }
+	                    remaining = elementBottom - containerBottom;
+	                    shouldScroll = remaining <= height(container) * scrollDistance + 1;
+	                    if (shouldScroll) {
+	                        checkWhenEnabled = true;
+	                        if (scrollEnabled) {
+	                            if (scope.$$phase || $rootScope.$$phase) {
+	                                return scope.infiniteScroll();
+	                            } else {
+	                                return scope.$apply(scope.infiniteScroll);
+	                            }
+	                        }
+	                    } else {
+	                        return checkWhenEnabled = false;
+	                    }
+	                };
+	                throttle = function (func, wait) {
+	                    var later, previous, timeout;
+	                    timeout = null;
+	                    previous = 0;
+	                    later = function () {
+	                        var context;
+	                        previous = new Date().getTime();
+	                        $interval.cancel(timeout);
+	                        timeout = null;
+	                        func.call();
+	                        return context = null;
+	                    };
+	                    return function () {
+	                        var now, remaining;
+	                        now = new Date().getTime();
+	                        remaining = wait - (now - previous);
+	                        if (remaining <= 0) {
+	                            clearTimeout(timeout);
+	                            $interval.cancel(timeout);
+	                            timeout = null;
+	                            previous = now;
+	                            return func.call();
+	                        } else {
+	                            if (!timeout) {
+	                                return timeout = $interval(later, remaining, 1);
+	                            }
+	                        }
+	                    };
+	                };
+	                if (THROTTLE_MILLISECONDS != null) {
+	                    handler = throttle(handler, THROTTLE_MILLISECONDS);
+	                }
+	                scope.$on('$destroy', function () {
+	                    return container.unbind('scroll', handler);
+	                });
+	                handleInfiniteScrollDistance = function (v) {
+	                    return scrollDistance = parseFloat(v) || 0;
+	                };
+	                scope.$watch('infiniteScrollDistance', handleInfiniteScrollDistance);
+	                handleInfiniteScrollDistance(scope.infiniteScrollDistance);
+	                handleInfiniteScrollDisabled = function (v) {
+	                    scrollEnabled = !v;
+	                    if (scrollEnabled && checkWhenEnabled) {
+	                        checkWhenEnabled = false;
+	                        return handler();
+	                    }
+	                };
+	                scope.$watch('infiniteScrollDisabled', handleInfiniteScrollDisabled);
+	                handleInfiniteScrollDisabled(scope.infiniteScrollDisabled);
+	                handleInfiniteScrollUseDocumentBottom = function (v) {
+	                    return useDocumentBottom = v;
+	                };
+	                scope.$watch('infiniteScrollUseDocumentBottom', handleInfiniteScrollUseDocumentBottom);
+	                handleInfiniteScrollUseDocumentBottom(scope.infiniteScrollUseDocumentBottom);
+	                changeContainer = function (newContainer) {
+	                    if (container != null) {
+	                        container.unbind('scroll', handler);
+	                    }
+	                    container = newContainer;
+	                    if (newContainer != null) {
+	                        return container.bind('scroll', handler);
+	                    }
+	                };
+	                changeContainer(windowElement);
+	                handleInfiniteScrollContainer = function (newContainer) {
+	                    if (newContainer == null || newContainer.length === 0) {
+	                        return;
+	                    }
+	                    if (newContainer instanceof HTMLElement) {
+	                        newContainer = angular.element(newContainer);
+	                    } else if (typeof newContainer.append === 'function') {
+	                        newContainer = angular.element(newContainer[newContainer.length - 1]);
+	                    } else if (typeof newContainer === 'string') {
+	                        newContainer = angular.element(document.querySelector(newContainer));
+	                    }
+	                    if (newContainer != null) {
+	                        return changeContainer(newContainer);
+	                    } else {
+	                        throw new Exception("invalid infinite-scroll-container attribute.");
+	                    }
+	                };
+	                scope.$watch('infiniteScrollContainer', handleInfiniteScrollContainer);
+	                handleInfiniteScrollContainer(scope.infiniteScrollContainer || []);
+	                if (attrs.infiniteScrollParent != null) {
+	                    changeContainer(angular.element(elem.parent()));
+	                }
+	                if (attrs.infiniteScrollImmediateCheck != null) {
+	                    immediateCheck = scope.$eval(attrs.infiniteScrollImmediateCheck);
+	                }
+	                return $interval(function () {
+	                    if (immediateCheck) {
+	                        return handler();
+	                    }
+	                }, 0, 1);
+	            }
+	        };
+	    }]);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33921,25 +34370,34 @@
 
 	'use strict';
 
-	module.exports = function (ngModule) {
-	    ngModule.directive('tag', function () {
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    __webpack_require__(25);
+	    ngModule.directive('tag', ["Methods", function (Methods) {
 	        return {
 	            restrict: 'E',
-	            template: __webpack_require__(21),
-	            link: function link(scope, el, attr) {
-	                console.log(el);
+	            scope: {
+	                tag: '=tag'
+	            },
+	            template: __webpack_require__(27),
+	            link: function link(scope, el) {
+	                if (scope.tag.items.length > 0) {
+	                    scope.tag.hasItem = true;
+	                    var item = angular.copy(scope.tag.items[0]);
+	                    item.title = item.brand.name + ' ' + item.model;
+	                    item.image = Methods.getImage(item.image.img_id);
+	                    scope.tag.item = item;
+	                }
+
 	                var PinClick = function PinClick() {
-	                    var title = $(this).parent().find('.pinProductTitle').text();
-	                    var price = $(this).parent().find('.pinProductPrice').text();
-	                    var link = $(this).parent().find('.pinProductButton').attr('href');
-	                    var image = $(this).parent().find('.pinProductImage').attr('src');
-
-	                    $('#ProductPopupTitle').text(title);
-	                    $('#ProductPopupPrice').text(price);
-	                    $('#ProductPopupButton').attr('href', link);
-	                    $('#ProductPopupImage').attr('src', image);
+	                    $('#ProductPopupTitle').text(item.title);
+	                    $('#ProductPopupPrice').text(item.price);
+	                    $('#ProductPopupButton').attr('href', item.link);
+	                    $('#ProductPopupImage').attr('src', item.image);
 	                    $('#ProductPopup').width('initial');
-
 	                    $('#ProductPopup').imagesLoaded(function () {
 	                        $('#ProductPopupOverlayWrapper').addClass('active');
 	                        var position = $('#ProductPopupOverlayWrapper').height() - $('#ProductPopup').height();
@@ -33954,39 +34412,73 @@
 
 	                    return false;
 	                };
+
+	                el.hover(function () {
+	                    var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
+	                    $(el).find('.pinProductWrapper').width(width);
+	                });
+
+	                scope.pinClick = PinClick;
+
+	                $('.imagePinWrapper').hover(function () {
+	                    var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
+	                    $(this).find('.pinProductWrapper').width(width);
+	                });
 	            }
 	        };
-	    });
+	    }]);
 	};
 
+	module.exports = exports['default'];
+
 /***/ },
-/* 21 */
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(26);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(13)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./tag.scss", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./tag.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(12)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "tag {\n  display: none;\n  position: absolute; }\n  tag .imagePinMobileLink {\n    display: none; }\n  tag .imagePin {\n    cursor: pointer; }\n    tag .imagePin:hover + .pinProductWrapper {\n      display: block; }\n  tag .pinProductWrapper {\n    display: none;\n    background-color: rgba(0, 0, 0, 0.6);\n    position: relative;\n    z-index: 90;\n    margin-top: -20px;\n    height: 140px;\n    width: -webkit-max-content;\n    width: -moz-max-content;\n    width: -ms-max-content;\n    width: max-content; }\n    tag .pinProductWrapper:hover {\n      display: block; }\n    tag .pinProductWrapper .pinProductImage {\n      float: left;\n      margin: 10px 0px 10px 10px; }\n    tag .pinProductWrapper .pinProductContent {\n      float: left;\n      margin: 35px 10px 15px 12px; }\n      tag .pinProductWrapper .pinProductContent .pinProductTitle {\n        color: #fff;\n        white-space: nowrap;\n        font-size: 15px; }\n      tag .pinProductWrapper .pinProductContent .pinProductPrice {\n        color: #fff;\n        margin-top: 8px;\n        font-size: 12px; }\n      tag .pinProductWrapper .pinProductContent .pinProductButton {\n        color: #fff;\n        margin-top: 10px;\n        background-color: #e97161;\n        text-align: center;\n        font-size: 13px;\n        display: block;\n        height: 25px;\n        line-height: 25px;\n        width: 100px; }\n  @media (max-width: 1023px) {\n    tag {\n      display: block; }\n      tag .imagePinMobileLink {\n        display: block; }\n      tag .imagePin {\n        display: none; } }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 27 */
 /***/ function(module, exports) {
 
-	module.exports = "<section class=\"tag-wrap\">\n\n</section>"
+	module.exports = "<section data-ng-if=\"tag.hasItem\">\n    <a class=\"imagePinMobileLink\" href=\"#\" ng-click=\"pinClick();\">\n        <img src=\"/public/img/pin.png\" height=\"20\" class=\"imagePinMobile\">\n    </a>\n    <img src=\"/public/img/pin.png\" height=\"26\" class=\"imagePin\">\n    <div class=\"pinProductWrapper\">\n        <img ng-src=\"{{ ::tag.item.image }}\" height=\"120\" class=\"pinProductImage\">\n        <div class=\"pinProductContent\">\n            <div class=\"pinProductTitle\">{{ ::tag.item.title}}</div>\n            <div class=\"pinProductPrice\">{{ ::tag.item.price}}원</div>\n            <a ng-href=\"{{ ::tag.item.link }}\" target=\"_blank\" class=\"pinProductButton\">구매처로 이동</a>\n        </div>\n    </div>\n</section>"
 
 /***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by youngmoon on 10/14/15.
-	 */
-
-	'use strict';
-
-	module.exports = function (ngModule) {
-	    ngModule.constant('CONFIG', {
-	        API_URL: 'http://api.ggumim.co.kr/1.7/magazines',
-	        IMAGE_URL: 'http://image.ggumim.co.kr/unsafe/{id}/{id}',
-	        PageCount_URL: 'http://api.ggumim.co.kr/api/count/',
-	        iMarket: 'itms-apps://itunes.apple.com/kr/app/id992731402?mt=8',
-	        AndMarket: 'market://details?id=com.osquare.mydearnest'
-	    });
-	};
-
-/***/ },
-/* 23 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33995,25 +34487,54 @@
 
 	'use strict';
 
-	module.exports = function (ngModule) {
-	    ngModule.controller('MagazineListController', ["$scope", "$timeout", "$sce", "$http", "MAGAZINES", "CONFIG", "Methods", function ($scope, $timeout, $sce, $http, MAGAZINES, CONFIG, Methods) {
-	        __webpack_require__(24);
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
 
-	        var magazines = MAGAZINES.data.data;
+	exports['default'] = function (ngModule) {
+	    __webpack_require__(29);
+	    ngModule.controller('MagazineListController', ["$scope", "$timeout", "$sce", "$http", "MAGAZINES", "CONFIG", "Methods", function ($scope, $timeout, $sce, $http, MAGAZINES, CONFIG, Methods) {
 	        $scope.scroll_busy = true;
 	        $scope.last_id = null;
 	        $scope.magazines = [];
 
 	        /**
-	         *
+	         *  초기 ui router resolve option 으로 가져온 magazines
+	         */
+	        mapping(MAGAZINES.data);
+
+	        /**
 	         *  Window 가 Resizing 될때에 이벤트 발생
 	         */
 	        $scope.$on('$WindowResize', adjust);
-	        Methods.map(magazines, formatting);
 
+	        $scope.loadMore = function () {
+	            if ($scope.scroll_busy) return;
+	            $scope.scroll_busy = true;
+	            var url = CONFIG.API_URL + '?limit=10';
+	            if ($scope.last_id) url += '&current=' + $scope.last_id;
+
+	            $http.get(url).success(mapping);
+	        };
+
+	        /**
+	         *  매거진을의 데이터를 가공하기 위해 iterator 를 돌린다.
+	         */
+	        function mapping(data) {
+	            Methods.map(data.data, formatting);
+	        }
+
+	        /**
+	         *
+	         * @param data
+	         * @param idx
+	         * @param array
+	         * @desc
+	         * 앞에서 보여줄 데이터를 가공한 후, $scope.magazines 로 밀어준다.
+	         */
 	        function formatting(data, idx, array) {
 	            data.id = data.mag_id;
-	            data.img_url = CONFIG.IMAGE_URL.replace(/{id}/gi, data.title_img.img_id);
+	            data.img_url = Methods.getImage(data.title_img.img_id);
 	            data.text = $sce.trustAsHtml(Methods.escapeHTML(data.title));
 
 	            if (array.length - 1 === idx) $scope.scroll_busy = false;
@@ -34021,12 +34542,23 @@
 	            push(data);
 	        }
 
+	        /**
+	         *
+	         * @param data
+	         * @desc
+	         * data 를 받아서 $scope.magazines 로 push 하며, angular digest 를 돌리면서
+	         * css 를 잡아준다.
+	         */
 	        function push(data) {
 	            $scope.last_id = data.id;
 	            $scope.magazines.push(data);
 	            $timeout(adjust);
 	        }
 
+	        /**
+	         * @desc
+	         * Window Size 를 계산하면서 magazine 의 css 를 조정.
+	         */
 	        function adjust() {
 	            var width = Math.floor($(window).width() / 2) - 1;
 	            if ($(window).width() < 1024) {
@@ -34039,17 +34571,19 @@
 	    }]);
 	};
 
+	module.exports = exports['default'];
+
 /***/ },
-/* 24 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(25);
+	var content = __webpack_require__(30);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(14)(content, {});
+	var update = __webpack_require__(13)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -34066,34 +34600,77 @@
 	}
 
 /***/ },
-/* 25 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(13)();
+	exports = module.exports = __webpack_require__(12)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "@charset \"UTF-8\";\n.homedeco_main #Content.magazineWrapper {\n  margin-left: 0px;\n  margin-right: 0px; }\n\n.homedeco_main .magazineWrapper .magazineItem {\n  background-repeat: no-repeat;\n  background-position: center;\n  background-size: cover;\n  float: left;\n  -webkit-transform-style: preserve-3d;\n  -moz-transform-style: preserve-3d;\n  -ms-transform-style: preserve-3d;\n  transform-style: preserve-3d; }\n\n.homedeco_main .magazineWrapper .magazineItemGradient {\n  position: relative;\n  top: 60%;\n  height: 40%;\n  background: -moz-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* FF3.6+ */\n  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, transparent), color-stop(100%, rgba(0, 0, 0, 0.5)));\n  /* Chrome,Safari4+ */\n  background: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* Chrome10+,Safari5.1+ */\n  background: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* Opera 11.10+ */\n  background: -ms-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* IE10+ */\n  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* W3C */\n  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#7f000000',GradientType=0 );\n  /* IE6-9 */ }\n\n.homedeco_main .magazineWrapper .magazineItemText {\n  word-break: keep-all;\n  line-height: 1.2;\n  padding: 0 20px;\n  position: relative;\n  top: 50%;\n  transform: translateY(-50%);\n  -webkit-transform: translateY(-50%);\n  -ms-transform: translateY(-50%);\n  -moz-transform: translateY(-50%);\n  -o-transform: translateY(-50%);\n  font-size: 22px;\n  font-family: '\\ACE0\\B3C4   M';\n  font-weight: bold;\n  color: #fff;\n  text-align: center; }\n\n.homedeco_main .magazineWrapper .magazineItem:first-child .magazineItemText {\n  top: 0;\n  font-size: 27px; }\n\n@media (min-width: 1024px) {\n  .homedeco_main .magazineWrapper .magazineItem {\n    width: 340px !important;\n    height: 340px !important; }\n  .homedeco_main .magazineWrapper .magazineItem:nth-child(2) {\n    width: 700px !important; } }\n\n@media (max-width: 1023px) {\n  .homedeco_main #Content.magazineWrapper {\n    margin-left: 0;\n    margin-right: 0; }\n  .homedeco_main #MagazineTitle {\n    padding-bottom: 4px; }\n  .homedeco_main .magazineWrapper .magazineItem {\n    margin: 2px 0 0 0; }\n  .homedeco_main .magazineWrapper .magazineItem:nth-child(even) {\n    margin-left: 2px; }\n  .homedeco_main .magazineWrapper .magazineItem .magazineItemText {\n    top: 40%;\n    padding: 0 10px;\n    font-size: 13px; }\n  .homedeco_main .magazineWrapper .magazineItem:first-child .magazineItemText {\n    font-size: 16px; } }\n", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\n.homedeco_main #Content.magazineWrapper {\n  margin-left: -10px;\n  margin-right: -10px; }\n\n.homedeco_main .magazineWrapper .magazineItem {\n  background-repeat: no-repeat;\n  background-position: center;\n  background-size: cover;\n  float: left;\n  -webkit-transform-style: preserve-3d;\n  -moz-transform-style: preserve-3d;\n  -ms-transform-style: preserve-3d;\n  transform-style: preserve-3d; }\n\n.homedeco_main .magazineWrapper .magazineItemGradient {\n  position: relative;\n  top: 60%;\n  height: 40%;\n  background: -moz-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* FF3.6+ */\n  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, transparent), color-stop(100%, rgba(0, 0, 0, 0.5)));\n  /* Chrome,Safari4+ */\n  background: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* Chrome10+,Safari5.1+ */\n  background: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* Opera 11.10+ */\n  background: -ms-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* IE10+ */\n  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);\n  /* W3C */\n  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#7f000000',GradientType=0 );\n  /* IE6-9 */ }\n\n.homedeco_main .magazineWrapper .magazineItemText {\n  word-break: keep-all;\n  line-height: 1.2;\n  padding: 0 20px;\n  position: relative;\n  top: 50%;\n  transform: translateY(-50%);\n  -webkit-transform: translateY(-50%);\n  -ms-transform: translateY(-50%);\n  -moz-transform: translateY(-50%);\n  -o-transform: translateY(-50%);\n  font-size: 22px;\n  font-family: '\\ACE0\\B3C4   M';\n  font-weight: bold;\n  color: #fff;\n  text-align: center; }\n\n@media (min-width: 1024px) {\n  .homedeco_main .magazineWrapper .magazineItem {\n    width: 340px !important;\n    height: 340px !important;\n    margin: 10px; }\n  .homedeco_main .magazineWrapper .magazineItem:nth-child(1) {\n    width: 700px !important; } }\n\n@media (max-width: 1023px) {\n  .homedeco_main #Content.magazineWrapper {\n    margin-left: 0;\n    margin-right: 0; }\n  .homedeco_main #MagazineTitle {\n    padding-bottom: 4px; }\n  .homedeco_main .magazineWrapper .magazineItem {\n    margin: 2px 0 0 0; }\n  .homedeco_main .magazineWrapper .magazineItem:nth-child(even) {\n    margin-left: 2px; }\n  .homedeco_main .magazineWrapper .magazineItem .magazineItemText {\n    top: 40%;\n    padding: 0 10px;\n    font-size: 13px; } }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 26 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by youngmoon on 10/14/15.
 	 */
+
 	'use strict';
 
-	var _ = __webpack_require__(27);
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
 
-	module.exports = function (ngModule) {
-	    ngModule.service('Methods', function () {
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _lodash = __webpack_require__(32);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	exports['default'] = function (ngModule) {
+
+	    ngModule.service('Methods', ["CONFIG", "APPLINK", function (CONFIG, APPLINK) {
 
 	        var that = this;
+
+	        /**
+	         *
+	         * @returns {string}
+	         * @desc
+	         *
+	         * returning user agent model
+	         */
+	        this.getUserAgent = function () {
+	            return navigator.userAgent.toLocaleLowerCase();
+	        };
+
+	        /**
+	         *
+	         * @returns {boolean}r
+	         * @desc
+	         *
+	         * return whether or not the user is using android
+	         */
+	        this.isAndroid = function () {
+	            return that.getUserAgent().search('android') > -1;
+	        };
+
+	        /**
+	         *
+	         * @returns {boolean}
+	         * @desc
+	         *
+	         * return whether or not the user is using iphone
+	         */
+	        this.isiPhone = function () {
+	            return that.getUserAgent().search('iphone') > -1;
+	        };
 
 	        /**
 	         *
@@ -34157,27 +34734,39 @@
 	         * id 와 type 으로 알맞는 AppLink 를 반환
 	         */
 	        this.getLink = function () {
-
-	            var id = GetURLParameter('id'),
-	                type = GetURLParameter('isShare');
-
-	            return 'mydearnest://view?msgType=' + that.shareType(type) + '&id=' + (id || '');
+	            var id = that.GetURLParameter('id'),
+	                type = that.GetURLParameter('isShare'),
+	                Link = 'mydearnest://view?msgType=' + that.shareType(type) + (id ? '&id=' + id : '');
+	            return Link;
 	        };
 
+	        /**
+	         *  goto Application right away.
+	         */
 	        this.gotoApp = function () {
-	            var type = that.GetURLParameter('isShare');
-
-	            if (!type) return;
-
-	            var link = self.getLink();
+	            APPLINK.open(that.getLink());
 	        };
 
-	        this.map = _.map;
-	    });
+	        /**
+	         *
+	         * @param imageId
+	         * @returns {string}
+	         * @desc
+	         *
+	         * imageId 를 받아서 해당 이미지 URL 을 만들어서 return 해준다.
+	         */
+	        this.getImage = function (imageId) {
+	            return CONFIG.IMAGE_URL.replace(/{id}/gi, imageId);
+	        };
+
+	        this.map = _lodash2['default'].map;
+	    }]);
 	};
 
+	module.exports = exports['default'];
+
 /***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -46532,10 +47121,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)(module), (function() { return this; }())))
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -46549,6 +47138,182 @@
 		return module;
 	}
 
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by youngmoon on 10/20/15.
+	 */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (ngModule) {
+	    ngModule.service('APPLINK', function () {
+	        /**
+	         * Cannot run without DOM or user-agent
+	         */
+	        if (!window.document || !window.navigator) {
+	            return;
+	        }
+
+	        /**
+	         * Set up scope variables and settings
+	         */
+	        var timeout;
+	        var settings = {
+	            "iOS": {
+	                appName: 'mydearnest',
+	                appId: '992731402'
+	            },
+
+	            "android": {
+	                appId: 'com.osquare.mydearnest'
+	            },
+	            "fallback": true,
+	            "delay": 1000,
+	            "delta": 500
+	        };
+
+	        /**
+	         * Generate the app store link for iOS / Apple app store
+	         *
+	         * @private
+	         * @returns {String} App store itms-apps:// link
+	         */
+	        var getStoreURLiOS = function getStoreURLiOS() {
+	            var baseurl = "itms-apps://itunes.apple.com/app/";
+	            var name = settings.iOS.appName;
+	            var id = settings.iOS.appId;
+	            return id && name ? baseurl + name + "/id" + id + "?mt=8" : null;
+	        };
+
+	        /**
+	         * Generate the app store link for Google Play
+	         *
+	         * @private
+	         * @returns {String} Play store https:// link
+	         */
+	        var getStoreURLAndroid = function getStoreURLAndroid() {
+	            var baseurl = "market://details?id=";
+	            var id = settings.android.appId;
+	            return id ? baseurl + id : null;
+	        };
+
+	        /**
+	         * Get app store link, depending on the current platform
+	         *
+	         * @private
+	         * @returns {String} url
+	         */
+	        var getStoreLink = function getStoreLink() {
+	            var linkmap = {
+	                "ios": getStoreURLiOS(),
+	                "android": getStoreURLAndroid()
+	            };
+
+	            return linkmap[settings.platform];
+	        };
+
+	        /**
+	         * Check if the user-agent is Android
+	         *
+	         * @private
+	         * @returns {Boolean} true/false
+	         */
+	        var isAndroid = function isAndroid() {
+	            return navigator.userAgent.match('Android');
+	        };
+
+	        /**
+	         * Check if the user-agent is iPad/iPhone/iPod
+	         *
+	         * @private
+	         * @returns {Boolean} true/false
+	         */
+	        var isIOS = function isIOS() {
+	            return navigator.userAgent.match('iPad') || navigator.userAgent.match('iPhone') || navigator.userAgent.match('iPod');
+	        };
+
+	        /**
+	         * Check if the user is on mobile
+	         *
+	         * @private
+	         * @returns {Boolean} true/false
+	         */
+	        var isMobile = function isMobile() {
+	            return isAndroid() || isIOS();
+	        };
+
+	        /**
+	         * Each store links get from getStoreLink() function,
+	         *
+	         *
+	         * @private
+	         * @param {Integer} Timestamp when trying to open applink
+	         * @returns {Function} Function to be executed by setTimeout
+	         */
+	        var openAppStore = function openAppStore(ts) {
+	            return function () {
+	                var link = getStoreLink();
+	                var wait = settings.delay + settings.delta;
+	                if (typeof link === "string" && Date.now() - ts < wait) {
+	                    window.location.href = link;
+	                }
+	            };
+	        };
+
+	        /**
+	         * Tries to open app URI through a hidden iframe.
+	         *
+	         * @public
+	         * @param {String} APPlink URI
+	         */
+	        this.open = function (uri) {
+	            var has_safari = navigator.userAgent.indexOf('Safari/') > -1;
+	            var is_ios9 = navigator.userAgent.indexOf('iPhone OS 9_') > -1;
+
+	            if (isAndroid()) settings.platform = "android";
+	            if (isIOS()) settings.platform = "ios";
+
+	            if (!isMobile()) {
+	                return;
+	            }
+
+	            if (isAndroid() && !navigator.userAgent.match(/Firefox/)) {
+	                var matches = uri.match(/([^:]+):\/\/(.+)$/i);
+	                uri = "intent://" + matches[2] + "#Intent;scheme=" + matches[1];
+	                uri += ";package=" + settings.android.appId + ";end";
+	            }
+
+	            if (settings.fallback) {
+	                timeout = setTimeout(openAppStore(Date.now()), settings.delay);
+	            }
+
+	            if (has_safari || !is_ios9) {
+	                var iframe = document.createElement("iframe");
+	                iframe.onload = function () {
+	                    clearTimeout(timeout);
+	                    iframe.parentNode.removeChild(iframe);
+	                    window.location.href = uri;
+	                };
+
+	                iframe.src = uri;
+	                iframe.setAttribute("style", "display:none;");
+	                document.body.appendChild(iframe);
+	            } else {
+	                window.location.assign(uri);
+	            }
+	        };
+	    });
+	};
+
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

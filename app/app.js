@@ -35,11 +35,6 @@ var ngModule = angular.module('homedecoApp', [
                     },
                     template: require('./components/detail/detail.html'),
                     controller: 'MagazineController'
-                })
-                .state('test', {
-                    url: '/test5555.php',
-                    template: require('./components/test/test.html'),
-                    controller: 'TESTController'
                 });
 
         }])
@@ -50,12 +45,6 @@ var ngModule = angular.module('homedecoApp', [
 
         // App Link
         if (Methods.GetURLParameter('isShare')) Methods.gotoApp();
-
-
-        if (Methods.GetURLParameter('test')) {
-            var iframe = document.createElement('iframe');
-
-        }
 
         /**
          *  $rootScope Window Size Change Event
