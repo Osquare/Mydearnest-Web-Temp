@@ -40,8 +40,6 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <!-- Views -->
         <div data-ui-view=""></div>
 
-        <!-- App Link for Sharing -->
-        <applink></applink>
         <script src="./dist/bundle0032.js"></script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
