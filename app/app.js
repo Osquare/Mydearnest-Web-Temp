@@ -37,7 +37,7 @@ var ngModule = angular.module('homedecoApp', [
                     controller: 'MagazineController'
                 })
                 .state('test', {
-                    url: '/test5555',
+                    url: '/test5555.php',
                     template: require('./components/test/test.html'),
                     controller: 'TESTController'
                 });
