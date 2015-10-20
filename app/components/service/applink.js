@@ -146,10 +146,12 @@ export default (ngModule) => {
             }
 
             if (settings.fallback) {
-                timeout = $timeout(function () {openAppStore(Date.now())}, settings.delay);
+                timeout = $timeout(openAppStore(Date.now()), settings.delay);
             }
 
-            if (has_safari || !is_ios9) {
+            if (has_safari && is_ios9) {
+                window.location.assign(uri);
+            } else {
                 var iframe = document.createElement("iframe");
                 iframe.onload = function() {
                     $timeout.clear(timeout);
@@ -160,8 +162,6 @@ export default (ngModule) => {
                 iframe.src = uri;
                 iframe.setAttribute("style", "display:none;");
                 document.body.appendChild(iframe);
-            } else {
-                window.location.assign(uri);
             }
         };
     });

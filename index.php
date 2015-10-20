@@ -80,7 +80,6 @@ $titleImage = empty($titleImageString) ? "public/img/og_main.png" :
     <script src="public/js/imagesloaded.pkgd.min.js"></script>
 </head>
 <body ng-app="homedecoApp">
-    <script src="./dist/applinking.js"></script>
     <!-- Application Header -->
     <app-header></app-header>
 
@@ -90,7 +89,7 @@ $titleImage = empty($titleImageString) ? "public/img/og_main.png" :
     <!-- Views -->
     <div data-ui-view=""></div>
 
-    <script src="./dist/bundle0037.js"></script>
+    <script src="./dist/bundle0038.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
