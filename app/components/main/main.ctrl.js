@@ -5,7 +5,12 @@
 export default (ngModule) => {
     require('./main.scss');
     ngModule.controller('MagazineListController',
-        function ($scope, $timeout, $sce, $http, MAGAZINES, CONFIG, Methods) {
+        function ($scope, $timeout, $sce, $http, $location, MAGAZINES, CONFIG, Methods) {
+            if (Methods.GetURLParameter('id')) {
+                return $location.url('/view.php?id=' + Methods.GetURLParameter('id'));
+            }
+
+
             $scope.scroll_busy = true;
             $scope.last_id = null;
             $scope.magazines = [];
