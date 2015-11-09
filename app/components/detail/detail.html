@@ -4,7 +4,7 @@
             <div data-ng-bind-html="title" id="MagazineTitle"></div>
             <div id="MagazineImages">
                 <div class="magazineContainer" data-ng-repeat="page in pages">
-                    <div class="magazineImage">
+                    <div class="magazineImage" data-ng-if="$index !== 0">
                         <img data-ng-src="http://image.ggumim.co.kr/unsafe/{{page.image.img_id}}/{{page.image.img_id}}" width="100%">
                         <tag data-ng-repeat="tag in page.tags" tag="tag" overlay="overlay"
                              ng-style="{ top: tag.y + '%', left: tag.x + '%' }">
