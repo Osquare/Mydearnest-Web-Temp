@@ -7,7 +7,7 @@ var config = {
 	entry: './app/app.js',
 	output: {
 		path: path.resolve(__dirname, 'app'),
-		filename: "bundle0038.js"
+		filename: "bundle0039.js"
 	},
 
 	plugins: [

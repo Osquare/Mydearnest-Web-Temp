@@ -25,8 +25,8 @@ export default (ngModule) => {
         /**
          *
          * @returns {boolean}r
-         * @desc
          *
+         * @desc
          * return whether or not the user is using android
          */
         this.isAndroid = () => {

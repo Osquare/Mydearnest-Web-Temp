@@ -6,10 +6,6 @@ export default (ngModule) => {
     require('./main.scss');
     ngModule.controller('MagazineListController',
         function ($scope, $timeout, $sce, $http, $location, MAGAZINES, CONFIG, Methods) {
-            if (Methods.GetURLParameter('id')) {
-                return $location.url('/view.php?id=' + Methods.GetURLParameter('id'));
-            }
-
 
             $scope.scroll_busy = true;
             $scope.last_id = null;
@@ -35,7 +31,7 @@ export default (ngModule) => {
             };
 
             /**
-             *  매거진을의 데이터를 가공하기 위해 iterator 를 돌린다.
+             *  매거진의 데이터를 가공하기 위해 iterator 를 돌린다.
              */
             function mapping (data) {
                 Methods.map(data.data, formatting);
