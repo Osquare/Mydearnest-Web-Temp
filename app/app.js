@@ -43,6 +43,21 @@ var ngModule = angular.module('homedecoApp', [
         var referrer = Methods.GetURLParameter('referrer');
         $http.put(CONFIG.PageCount_URL + 'guest?referrer=' +  (referrer || ''));
 
+        // Item Share
+        if (Methods.GetURLParameter('isShare') === 'furniture' && Methods.GetURLParameter('id')) {
+            $http
+                .get(CONFIG.GET_FURNITURE + Methods.GetURLParameter('id'))
+                .success(function (data) {
+                    var item = {
+                        title: data.data.brand.name + ' ' + data.data.model,
+                        price: data.data.price,
+                        link: data.data.link,
+                        image: Methods.getImage(data.data.image.img_id)
+                    };
+                    Methods.itemLayerOpen(item);
+                });
+        }
+
         // App Link
         if (Methods.GetURLParameter('isShare')) Methods.gotoApp();
 

@@ -17,10 +17,6 @@ export default (ngModule) => {
             $scope.title = $sce.trustAsHtml(Methods.escapeHTML($scope.magazine.title));
             $scope.pages = [];
 
-            $scope.close = function () {
-                $('#ProductPopupOverlayWrapper').removeClass('active');
-            };
-
             Methods.map($scope.magazine.pages,(data) => {
                 data.text = $sce.trustAsHtml(Methods.escapeHTML(data.text));
                 $scope.pages.push(data);

@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 export default (ngModule) => {
 
-    ngModule.service('Methods', function (CONFIG, APPLINK) {
+    ngModule.service('Methods', function ($rootScope, CONFIG, ACTIONS, APPLINK) {
 
         var that = this;
 
@@ -131,6 +131,25 @@ export default (ngModule) => {
          */
         this.getImage = (imageId) => {
             return CONFIG.IMAGE_URL.replace(/{id}/gi, imageId);
+        };
+
+        /**
+         *
+         * @param item
+         * @desc
+         * 가구 레이어창을 띄운다
+         */
+        this.itemLayerOpen = (item) => {
+            console.log(item);
+            $rootScope.$broadcast(ACTIONS.itemLayerOpen, item);
+        };
+
+        /**
+         * @desc
+         * 가구 레이어창을 닫는다.
+         */
+        this.itemLayerClose = () => {
+            $rootScope.$broadcast(ACTIONS.itemLayerClose);
         };
 
         this.map = _.map;

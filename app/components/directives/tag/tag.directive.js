@@ -20,37 +20,13 @@ export default (ngModule) => {
                     scope.tag.item = item;
                 }
 
-                var PinClick = function () {
-                    $('#ProductPopupTitle').text(item.title);
-                    $('#ProductPopupPrice').text(item.price);
-                    $('#ProductPopupButton').attr('href', item.link);
-                    $('#ProductPopupImage').attr('src', item.image);
-                    $('#ProductPopup').width('initial');
-                    $('#ProductPopup').imagesLoaded(function() {
-                        $('#ProductPopupOverlayWrapper').addClass('active');
-                        var position = $('#ProductPopupOverlayWrapper').height() - $('#ProductPopup').height();
-                        if (position < 100) {
-                            var ratio = $('#ProductPopup').height() / $('#ProductPopup').width();
-                            var width = ($('#ProductPopupOverlayWrapper').height() - 60) / ratio;
-                            $('#ProductPopup').width(width + 'px');
-                            position = $('#ProductPopupOverlayWrapper').height() - $('#ProductPopup').height();
-                        }
-                        $('#ProductPopupWrapper').css('top', (position/2) + 'px');
-                    });
-
-                    return false;
+                scope.pinClick = () => {
+                    Methods.itemLayerOpen(item);
                 };
 
                 el.hover(function () {
                     var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
                     $(el).find('.pinProductWrapper').width(width);
-                });
-
-                scope.pinClick = PinClick;
-
-                $('.imagePinWrapper').hover(function() {
-                    var width = $(this).find('.pinProductImage').width() + $(this).find('.pinProductContent').width() + 34;
-                    $(this).find('.pinProductWrapper').width(width);
                 });
             }
         }

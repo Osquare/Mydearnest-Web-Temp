@@ -1,0 +1,86 @@
+@import '../../../app';
+
+.item-layer {
+  #ProductPopupOverlayWrapper {
+    display: none;
+  }
+
+  @media #{$mobile} {
+    #ProductPopupOverlayWrapper.active {
+      display: block;
+    }
+
+    #ProductPopupOverlayWrapper {
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #ProductPopupOverlay {
+      background: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      height: 100%;
+      width: 100%;
+    }
+    #ProductPopupWrapper {
+      max-height: 100%;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      position: relative;
+    }
+    #ProductPopup {
+      position: relative;
+      background: white;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 100%;
+    }
+    #ProductPopupHeader {
+      position: absolute;
+      right: -9px;
+      top: -9px;
+    }
+    #ProductPopupContent {
+      padding: 10px;
+    }
+    #ProductPopupImage {
+      width: 100%;
+    }
+    #ProductPopupImage,
+    #ProductPopupPrice,
+    #ProductPopupButton {
+      margin-bottom: 10px;
+    }
+    #ProductPopupText {
+      width: 50%;
+      float: left;
+    }
+    #ProductPopupTitle,
+    #ProductPopupPrice {
+      padding-left: 2px;
+    }
+    #ProductPopupTitle {
+      font-size: 16px;
+      color: #444;
+    }
+    #ProductPopupPrice {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #888;
+    }
+    #ProductPopupButton {
+      float: right;
+      display: block;
+      background-color: #e97161;
+      color: #fff;
+      text-align: center;
+      font-size: 14px;
+      width: 45%;
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
