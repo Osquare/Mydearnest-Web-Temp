@@ -91,7 +91,7 @@ $titleImage = empty($titleImageString) ? "public/img/og_main.png" :
 
     <!-- Item Layer -->
     <item-layer></item-layer>
-    <script src="./dist/bundle0040.js"></script>
+    <script src="./dist/bundle0041.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -140,7 +140,6 @@ export default (ngModule) => {
          * 가구 레이어창을 띄운다
          */
         this.itemLayerOpen = (item) => {
-            console.log(item);
             $rootScope.$broadcast(ACTIONS.itemLayerOpen, item);
         };
 
