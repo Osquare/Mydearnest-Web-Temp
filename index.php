@@ -89,6 +89,8 @@ $titleImage = empty($titleImageString) ? "public/img/og_main.png" :
     <!-- Views -->
     <div data-ui-view=""></div>
 
+    <!-- Item Layer -->
+    <item-layer></item-layer>
     <script src="./dist/bundle0040.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

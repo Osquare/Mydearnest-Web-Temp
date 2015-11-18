@@ -11,7 +11,6 @@ export default (ngModule) => {
             link: function (scope) {
 
                 scope.$on(ACTIONS.itemLayerOpen, function (event, item) {
-                    console.log(item);
                     $('#ProductPopupTitle').text(item.title);
                     $('#ProductPopupPrice').text(item.price);
                     $('#ProductPopupButton').attr('href', item.link);
