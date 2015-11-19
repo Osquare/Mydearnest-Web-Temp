@@ -5,7 +5,6 @@
     display: none;
   }
 
-  @media #{$mobile} {
     #ProductPopupOverlayWrapper.active {
       display: block;
     }
@@ -36,7 +35,7 @@
       background: white;
       margin: 0 auto;
       width: 100%;
-      max-width: 100%;
+      max-width: 700px;
     }
     #ProductPopupHeader {
       position: absolute;
@@ -82,5 +81,4 @@
       height: 30px;
       line-height: 30px;
     }
-  }
 }
