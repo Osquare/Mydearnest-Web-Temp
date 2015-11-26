@@ -56,7 +56,7 @@ if($type) {
     }
 } 
 
-$titleImage = empty($titleImageString) ? "public/img/og_main.png" :
+$titleImage = empty($titleImageString) ? "$titleImage" :
 	'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleImageString;
 ?>
 <!DOCTYPE html>
