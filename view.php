@@ -15,6 +15,17 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <base href="/" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- iOS -->
+        <meta property="al:ios:url" content="mydearnest://view?msgType=19" />
+        <meta property="al:ios:app_store_id" content="992731402" />
+        <meta property="al:ios:app_name" content=" 집꾸미기 " />
+
+        <!-- Android -->
+        <meta property="al:android:url" content="mydearnest://view?msgType=19" />
+        <meta property="al:android:package" content="com.osquare.mydearnest" />
+        <meta property="al:android:app_name" content="집꾸미기" />
+
 	    <meta property="og:title" content=" 집꾸미기 " />
 	    <meta property="og:type" content="website" />
 	    <meta property="og:description" content="<?=$titleText?>" />
