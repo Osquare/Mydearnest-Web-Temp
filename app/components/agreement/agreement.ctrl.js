@@ -8,8 +8,6 @@ export default (ngModule) => {
         function ($rootScope, $scope) {
             $rootScope.noBanner = true;
             
-            console.log('$$$$');
-
             $scope.$on('$destroy', function () {
                 $rootScope.noBanner = false;
             });
