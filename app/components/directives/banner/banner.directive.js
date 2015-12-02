@@ -8,7 +8,7 @@ export default (ngModule) => {
         return {
             restrict: 'E',
             template: require('./banner.html'),
-            link: function (scope, el, attr) {
+            link: function (scope, el) {
                 var aTag = el.find('#HeaderAppLink');
 
                 function paint () {

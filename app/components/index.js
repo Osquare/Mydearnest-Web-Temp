@@ -4,6 +4,7 @@
 
 
 export default (ngModule) => {
+    require('./agreement/agreement.ctrl')(ngModule);
     require('./config/actions')(ngModule);
     require('./config/config.constant')(ngModule);
     require('./detail/detail.ctrl')(ngModule);

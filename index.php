@@ -69,7 +69,7 @@ $titleImage = empty($titleImageString) ? "$titleImage" :
     <link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
 
     <!-- iOS -->
-    <meta property="al:ios:url" content="mydearnest://view?msgType=19&id=365859" />
+    <meta property="al:ios:url" content="mydearnest://view?msgType=19" />
     <meta property="al:ios:app_store_id" content="992731402" />
     <meta property="al:ios:app_name" content=" 집꾸미기 " />
 

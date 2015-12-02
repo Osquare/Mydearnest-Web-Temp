@@ -17,7 +17,7 @@ $titleImage = 'http://image.ggumim.co.kr/unsafe/'.$titleImageString.'/'.$titleIm
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- iOS -->
-        <meta property="al:ios:url" content="mydearnest://view?msgType=19&id=365859" />
+        <meta property="al:ios:url" content="mydearnest://view?msgType=19" />
         <meta property="al:ios:app_store_id" content="992731402" />
         <meta property="al:ios:app_name" content=" 집꾸미기 " />
 

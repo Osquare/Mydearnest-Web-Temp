@@ -35,8 +35,12 @@ var ngModule = angular.module('homedecoApp', [
                     },
                     template: require('./components/detail/detail.html'),
                     controller: 'MagazineController'
+                })
+                .state('agreement', {
+                    url: '/agreement',
+                    template: require('./components/agreement/agreement.html'),
+                    controller: 'AgreementController'
                 });
-
         }])
     .run(($rootScope, $window, $http, CONFIG, Methods) => {
         // Guest Count
